@@ -38,7 +38,7 @@ namespace Steam
         {
             CheckCache();
             var parsedResponse = new GetPublishedFileDetailsResponse();
-            if (cacheFile.Exists && (!cacheFile.LastWriteTime.ExpiredSince(5))) {
+            if (cacheFile.Exists && (!cacheFile.LastWriteTime.ExpiredSince(10))) {
                 foreach (var fileId in fileIds) {
                     var item = cache.FileDetails.FirstOrDefault(x => x.publishedfileid == fileId);
                     if (item != null) parsedResponse.response.publishedfiledetails.Add(item);
@@ -58,7 +58,7 @@ namespace Steam
             }
             var content = new FormUrlEncodedContent(values);
             var url = new Uri("https://api.steampowered.com/ISteamRemoteStorage/GetPublishedFileDetails/v1/");
-            Console.WriteLine($"[Steam] POST to {url} with payload {content.ToJson()} and values {values.ToJson()}");
+            Console.WriteLine($"[Steam] POST to {url} with payload {content.ToJson(false)} and values {values.ToJson(false)}");
             var response = await webClient.PostAsync(url, content);
             var responseString = await response.Content.ReadAsStringAsync();
             parsedResponse = JsonConvert.DeserializeObject<GetPublishedFileDetailsResponse>(responseString);

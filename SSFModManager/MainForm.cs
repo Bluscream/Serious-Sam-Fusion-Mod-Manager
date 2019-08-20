@@ -7,14 +7,16 @@ using System.Net.Http;
 
 using SteamSharp;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace SSFModManager
 {
     public partial class MainForm : Form
     {
-        private SSF.Game game;
+        public SSF.Game Game;
         // public SteamClient steam;
-        private HttpClient webClient;
+        public HttpClient webClient;
+        private ModDirWatcher ModDirWatcher;
         private async void PreInit()
         {
             var path = new Setup.PathLogic();
@@ -22,7 +24,8 @@ namespace SSFModManager
             if (!binPath.Exists) {
                 MessageBox.Show("Sorry the game wasn't found, exiting.."); Application.Exit();
             }
-            game = new SSF.Game(binPath.Parent.Parent);
+            Game = new SSF.Game(binPath.Parent.Parent);
+
         }
         public MainForm()
         {
@@ -33,30 +36,64 @@ namespace SSFModManager
 
         private async void Init() {
             webClient = new HttpClient();
-            await game.UpdateModDetailsAsync(webClient);
+            Game.OnDetailsLoaded += Game_OnDetailsLoaded;
+            await Game.UpdateModDetailsAsync(webClient);
+            // if (_ != null) FillTabs(Game.Mods);
             // steam = new SteamClient();
             // steam.Timeout = 5;
+            Log($"Loaded {SSF.Game.Name} with {Game.Mods.Count} mods.", Color.Green);
+        }
+
+        private void Game_OnDetailsLoaded(object sender)
+        {
+            InitModList();
         }
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            Console.WriteLine(game.Mods.Where(t => t.Disabled).ToJson());
-            txt_brief.Text = game.ToJson();
+            // Console.WriteLine(game.Mods.Where(t => t.Disabled).ToJson());
+            txt_brief.Text = Game.ToJson();
             InitModList();
         }
 
-        private void InitModList()
+        public void InitModList()
         {
-            lst_mods.DataSource = game.Mods;
-            UpdateModList();
-            return;
-            foreach (var mod in game.Mods) {
-                lst_mods.Items.Add(mod);
+            // lst_mods.DataSource = game.Mods;
+            FillModList(Game.Mods);
+            FillTabs(Game.Mods);
+        }
+
+        private void FillTabs(List<SSF.Mod> mods)
+        {
+            tabs_tags.TabPages.Clear();
+            var tags = new HashSet<string>();
+            foreach (var mod in mods) {
+                if (mod.Tags is null) continue;
+                foreach (var tag in mod.Tags) {
+                    tags.Add(tag);
+                }
+            }
+            foreach (var tag in tags) {
+                tabs_tags.TabPages.Add(new TabPage() { Text = tag });
             }
         }
 
-        private void UpdateModList() {
+        private void Tabs_tags_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var i = (sender as TabControl).SelectedIndex;
+            if (i < 0) return;
+            var text = tabs_tags.TabPages[i].Text;
+            if (text is null) return;
+            if (text == "All") InitModList();
+            FillModList(Game.Mods.Where(m => m.Tags.Contains(text)).ToList());
+        }
 
+        private void FillModList(List<SSF.Mod> mods) {
+            lst_mods.Items.Clear();
+            foreach (var mod in mods) {
+                lst_mods.Items.Add(mod);
+            }
+            // lst_mods.SelectedIndex = 0;
         }
 
         private void Menu_mods_Opening(object sender, CancelEventArgs e)
@@ -64,11 +101,15 @@ namespace SSFModManager
             if (lst_mods.SelectedItems.Count < 1) { e.Cancel = true; return; }
             var mod = (SSF.Mod)lst_mods.SelectedItems[0];
             if (mod == null) { e.Cancel = true; return; }
+            if (lst_mods.SelectedItems.Count > 1) {
+                openFolderToolStripMenuItem.Visible = false;
+            }
             menu_mods.Items[1].Text = mod.Disabled ? "Enable" : "Disable";
         }
 
         private void Lst_mods_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (lst_mods.SelectedItems.Count < 1) return;
             var mod = (SSF.Mod)lst_mods.SelectedItems[0];
             txt_brief.Text = mod.ToJson();
         }
@@ -92,6 +133,75 @@ namespace SSFModManager
                 var mod = mods.First();
                 MessageBox.Show($"{(!mod.Disabled).ToEnabledDisabled()} {mod.Name}", Text);
             }
+        }
+
+        private void OpenDisabledFolderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Utils.OpenFolderInExplorer(Game.DisabledModsDir);
+        }
+
+        private bool CheckGameRunning() {
+            if (!Game.Running()) return true;
+            var list = Game.Processes.Select(p => $"{p.ProcessName} ({p.Id})").ToList();
+            var result = MessageBox.Show($"We have detected that {Game.Processes.Count} game processes are already running:\n\n{string.Join("\n", list)}\n\nDo you want to kill them before starting the game?", "Game already running", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+            if (result == DialogResult.Cancel) return false;
+            else if (result == DialogResult.Yes) {
+                foreach (var proc in Game.Processes) {
+                    if (!proc.HasExited) proc.Kill();
+                }
+            }
+            return true;
+        }
+
+        private void StartToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!CheckGameRunning()) return;
+            var file = ModifierKeys == Keys.Shift ? Game.Binaries.Main.File(Game, SSF.Architecture.WIN_64) : Game.Binaries.Modded.File(Game, SSF.Architecture.WIN_64);
+            Utils.StartProcess(file);
+        }
+
+        private void StartEditorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void KillToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach (var proc in Game.Processes) {
+                if (!proc.HasExited) proc.Kill();
+            }
+            MessageBox.Show($"Killed {Game.Processes.Where(p => p.HasExited).Count()} / {Game.Processes.Count} processes");
+        }
+        private void FocusToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void ReloadToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            InitModList();
+        }
+
+        private void MainForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            return;
+            if (e.Shift) {
+                startToolStripMenuItem.Text = "Start";
+            } else {
+                startToolStripMenuItem.Text = "Start (Modded)";
+            }
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (ModDirWatcher != null) ModDirWatcher.Dispose();
+        }
+
+        public void Log(string message, Color color)
+        {
+            if (!color.IsEmpty) status.ForeColor = color;
+            string timestamp = DateTime.Now.ToString("HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture);
+            status.Text = $"[{timestamp}] {message}";
         }
     }
 }

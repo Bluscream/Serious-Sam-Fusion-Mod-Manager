@@ -38,7 +38,7 @@ namespace SSF
                     switch (value)
                     {
                         case true:
-                            if (!disabledFile.Exists) File.WriteAllText(disabledFile.FullName, "Disabled by Serious Sam Mod Manager");
+                            if (!disabledFile.Exists) File.WriteAllText(disabledFile.FullName, $"Disabled by Serious Sam Mod Manager at {DateTime.Now}\nID: {Id} ({Uuid})\nName: {Name}\nDir: {Directory.FullName}");
                             break;
                         case false:
                             if (disabledFile.Exists) disabledFile.Delete();
@@ -56,6 +56,14 @@ namespace SSF
             public FileWithHash GroFile { get; set; }
             public FileWithHash Thumbnail { get; set; }
             public Publishedfiledetail Details { get; set; }
+            public List<string> Tags { get {
+                if (Details is null) return null;
+                var ret = new List<string>();
+                foreach (var tag in Details.tags) {
+                    ret.Add(tag.tag);
+                }
+                return ret;
+            } }
             /// <summary>
             /// 
             /// </summary>
@@ -101,7 +109,7 @@ namespace SSF
         
             public async Task<Publishedfiledetail> UpdateModDetailsAsync(HttpClient webClient) {
                 var parsedResponse = await Steam.Utils.GetPublishedFileDetailsAsync(webClient, Id);
-                Console.WriteLine(parsedResponse.ToJson());
+                // Console.WriteLine(parsedResponse.ToJson());
                 Details = parsedResponse.response.publishedfiledetails.First();
                 return Details;
             }
