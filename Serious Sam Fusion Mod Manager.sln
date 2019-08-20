@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29123.89
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Serious Sam Fusion Mod Manager", "Serious Sam Fusion Mod Manager\Serious Sam Fusion Mod Manager.csproj", "{53E38B43-8829-4BE5-87D4-DB147E09463C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VRCModManager", "C:\Users\blusc\source\repos\VRChat\Tools\VRChatApps\VRChatModInstaller\VRCModManager\VRCModManager.csproj", "{66C53D4D-B5C5-4CA2-92FB-E53E370B1C23}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VRChatLauncher", "C:\Users\blusc\source\repos\VRChat\Tools\VRChatApps\VRChatLauncher\VRChatLauncher.csproj", "{9A87A994-89F6-44F2-8224-3C27420C7998}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{53E38B43-8829-4BE5-87D4-DB147E09463C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53E38B43-8829-4BE5-87D4-DB147E09463C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53E38B43-8829-4BE5-87D4-DB147E09463C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53E38B43-8829-4BE5-87D4-DB147E09463C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66C53D4D-B5C5-4CA2-92FB-E53E370B1C23}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66C53D4D-B5C5-4CA2-92FB-E53E370B1C23}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66C53D4D-B5C5-4CA2-92FB-E53E370B1C23}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66C53D4D-B5C5-4CA2-92FB-E53E370B1C23}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A87A994-89F6-44F2-8224-3C27420C7998}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A87A994-89F6-44F2-8224-3C27420C7998}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A87A994-89F6-44F2-8224-3C27420C7998}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A87A994-89F6-44F2-8224-3C27420C7998}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {97987278-755B-4DF9-9CEB-DD8597ED491A}
+	EndGlobalSection
+EndGlobal
