@@ -17,6 +17,7 @@ namespace SSFModManager
         // public SteamClient steam;
         public HttpClient webClient;
         private ModDirWatcher ModDirWatcher;
+        private List<SSF.Mod> modsInCategory;
         private async void PreInit()
         {
             var path = new Setup.PathLogic();
@@ -66,6 +67,7 @@ namespace SSFModManager
         private void FillTabs(List<SSF.Mod> mods)
         {
             tabs_tags.TabPages.Clear();
+            tabs_tags.TabPages.Add(new TabPage() { Text = "All" });
             var tags = new HashSet<string>();
             foreach (var mod in mods) {
                 if (mod.Tags is null) continue;
@@ -84,13 +86,15 @@ namespace SSFModManager
             if (i < 0) return;
             var text = tabs_tags.TabPages[i].Text;
             if (text is null) return;
-            if (text == "All") InitModList();
-            FillModList(Game.Mods.Where(m => m.Tags.Contains(text)).ToList());
+            if (text != "All") modsInCategory = Game.Mods.Where(m => m.Tags.Contains(text)).ToList();
+            else modsInCategory = Game.Mods;
+            FillModList(modsInCategory);
+            FilterByText();
         }
 
         private void FillModList(List<SSF.Mod> mods) {
             lst_mods.Items.Clear();
-            foreach (var mod in mods) {
+            foreach (var mod in mods.OrderBy(m => m.Name)) {
                 lst_mods.Items.Add(mod);
             }
             // lst_mods.SelectedIndex = 0;
@@ -202,6 +206,15 @@ namespace SSFModManager
             if (!color.IsEmpty) status.ForeColor = color;
             string timestamp = DateTime.Now.ToString("HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture);
             status.Text = $"[{timestamp}] {message}";
+        }
+
+        private void Txt_mods_filter_TextChanged(object sender, EventArgs e) => FilterByText();
+        private void FilterByText()
+        {
+            var txt = txt_mods_filter.Text.ToLowerInvariant();
+            List<SSF.Mod> matchingMods = modsInCategory;
+            if (!txt.IsNullOrEmpty()) matchingMods = matchingMods.Where(m => m.Name.ToLowerInvariant().Contains(txt)).ToList();
+            FillModList(matchingMods);
         }
     }
 }

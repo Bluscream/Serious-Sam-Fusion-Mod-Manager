@@ -29,15 +29,16 @@ namespace Steam
 {
 
     public static class Utils {
-        private static FileInfo cacheFile = new FileInfo("steam.cache.json");
+        private static FileInfo cacheFile = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory).CombineFile("steam.cache.json");
         private static Cache cache;
         public static async Task<GetPublishedFileDetailsResponse> GetPublishedFileDetailsAsync(HttpClient webClient, SSF.Mod Mod) => await GetPublishedFileDetailsAsync(webClient, Mod.Id);
         public static async Task<GetPublishedFileDetailsResponse> GetPublishedFileDetailsAsync(HttpClient webClient, string fileId) => await GetPublishedFileDetailsAsync(webClient, new List<string>() { fileId });
 
         public static async Task<GetPublishedFileDetailsResponse> GetPublishedFileDetailsAsync(HttpClient webClient, List<string> fileIds)
         {
-            CheckCache();
             var parsedResponse = new GetPublishedFileDetailsResponse();
+            if (fileIds.Count < 1) return parsedResponse;
+            CheckCache();
             if (cacheFile.Exists && (!cacheFile.LastWriteTime.ExpiredSince(10))) {
                 foreach (var fileId in fileIds) {
                     var item = cache.FileDetails.FirstOrDefault(x => x.publishedfileid == fileId);
@@ -61,7 +62,8 @@ namespace Steam
             Console.WriteLine($"[Steam] POST to {url} with payload {content.ToJson(false)} and values {values.ToJson(false)}");
             var response = await webClient.PostAsync(url, content);
             var responseString = await response.Content.ReadAsStringAsync();
-            parsedResponse = JsonConvert.DeserializeObject<GetPublishedFileDetailsResponse>(responseString);
+            try { parsedResponse = JsonConvert.DeserializeObject<GetPublishedFileDetailsResponse>(responseString); }
+            catch (Exception ex) { Console.WriteLine($"[Steam] Could not deserialize response ({ex.Message})\n{responseString}"); } // {response.ReasonPhrase} ({response.StatusCode})\n
 
             foreach (var item in parsedResponse.response.publishedfiledetails) {
                 cache.FileDetails.RemoveAll(x => x.publishedfileid == item.publishedfileid);

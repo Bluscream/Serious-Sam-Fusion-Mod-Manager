@@ -49,6 +49,7 @@
             this.tabs_tags = new System.Windows.Forms.TabControl();
             this.tab_all = new System.Windows.Forms.TabPage();
             this.status = new System.Windows.Forms.StatusStrip();
+            this.txt_mods_filter = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -68,6 +69,7 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.txt_mods_filter);
             this.splitContainer1.Panel1.Controls.Add(this.lst_mods);
             // 
             // splitContainer1.Panel2
@@ -79,13 +81,15 @@
             // 
             // lst_mods
             // 
+            this.lst_mods.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lst_mods.ContextMenuStrip = this.menu_mods;
-            this.lst_mods.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lst_mods.FormattingEnabled = true;
-            this.lst_mods.Location = new System.Drawing.Point(0, 0);
+            this.lst_mods.Location = new System.Drawing.Point(0, 26);
             this.lst_mods.Name = "lst_mods";
             this.lst_mods.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.lst_mods.Size = new System.Drawing.Size(286, 522);
+            this.lst_mods.Size = new System.Drawing.Size(286, 485);
             this.lst_mods.TabIndex = 0;
             this.lst_mods.SelectedIndexChanged += new System.EventHandler(this.Lst_mods_SelectedIndexChanged);
             // 
@@ -148,28 +152,28 @@
             // startToolStripMenuItem
             // 
             this.startToolStripMenuItem.Name = "startToolStripMenuItem";
-            this.startToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.startToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
             this.startToolStripMenuItem.Text = "Start (Modded)";
             this.startToolStripMenuItem.Click += new System.EventHandler(this.StartToolStripMenuItem_Click);
             // 
             // killToolStripMenuItem
             // 
             this.killToolStripMenuItem.Name = "killToolStripMenuItem";
-            this.killToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.killToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
             this.killToolStripMenuItem.Text = "Kill";
             this.killToolStripMenuItem.Click += new System.EventHandler(this.KillToolStripMenuItem_Click);
             // 
             // focusToolStripMenuItem
             // 
             this.focusToolStripMenuItem.Name = "focusToolStripMenuItem";
-            this.focusToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.focusToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
             this.focusToolStripMenuItem.Text = "Focus";
             this.focusToolStripMenuItem.Click += new System.EventHandler(this.FocusToolStripMenuItem_Click);
             // 
             // startEditorToolStripMenuItem
             // 
             this.startEditorToolStripMenuItem.Name = "startEditorToolStripMenuItem";
-            this.startEditorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.startEditorToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
             this.startEditorToolStripMenuItem.Text = "Start Editor";
             this.startEditorToolStripMenuItem.Click += new System.EventHandler(this.StartEditorToolStripMenuItem_Click);
             // 
@@ -229,6 +233,17 @@
             this.status.TabIndex = 4;
             this.status.Text = "Status";
             // 
+            // txt_mods_filter
+            // 
+            this.txt_mods_filter.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txt_mods_filter.Location = new System.Drawing.Point(4, 4);
+            this.txt_mods_filter.Name = "txt_mods_filter";
+            this.txt_mods_filter.Size = new System.Drawing.Size(279, 20);
+            this.txt_mods_filter.TabIndex = 1;
+            this.txt_mods_filter.TextChanged += new System.EventHandler(this.Txt_mods_filter_TextChanged);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -246,6 +261,7 @@
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyDown);
             this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
@@ -278,6 +294,7 @@
         private System.Windows.Forms.ToolStripMenuItem reloadToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem focusToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem startEditorToolStripMenuItem;
+        private System.Windows.Forms.TextBox txt_mods_filter;
     }
 }
 

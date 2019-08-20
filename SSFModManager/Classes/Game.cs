@@ -50,12 +50,10 @@ namespace SSF
         public event DetailsLoadedEventHandler OnDetailsLoaded;
         public Game(DirectoryInfo basePath) {
             BasePath = basePath;
-            Mods = new List<Mod>();
             ModDirs = GetModsDirs();
             foreach (var modDir in ModDirs) {
                 Mods.AddRange(LoadMods(modDir));
             }
-            Mods.OrderBy(m => m.Name);
         }
         public bool Running()
         {
@@ -91,6 +89,7 @@ namespace SSF
             /*SteamRequest request = new SteamRequest("ISteamRemoteStorage/GetPublishedFileDetails/v1/");
             request.AddParameter("itemcount", Mods.Count);*/
             var fileIds = Mods.Select(t => t.Id).ToList();
+            if (fileIds.Count < 1) return null;
             /*request.AddParameter("publishedfileids", fileIds);
 			var response = steam.Execute(request);
             Console.WriteLine(response.Content);

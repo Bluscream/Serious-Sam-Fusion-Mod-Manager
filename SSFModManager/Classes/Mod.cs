@@ -14,11 +14,11 @@ namespace SSF
 {
     public class FileWithHash
     {
-        public string SharedPath { get; set; }
+        public string PrivatePath { get; set; }
         public string Hash { get; set; }
         public FileWithHash(string sharedPath, string hash)
         {
-            SharedPath = sharedPath; Hash = hash;
+            PrivatePath = sharedPath; Hash = hash;
         }
     }
         /// <summary>
