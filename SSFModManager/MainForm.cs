@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using System.Data;
 using System.Linq;
 using System.ComponentModel;
@@ -13,6 +14,7 @@ namespace SSFModManager
 {
     public partial class MainForm : Form
     {
+        private static Regex tabRegex = new Regex(@"(.*) \(\d+\)");
         public SSF.Game Game;
         // public SteamClient steam;
         public HttpClient webClient;
@@ -42,6 +44,7 @@ namespace SSFModManager
             // if (_ != null) FillTabs(Game.Mods);
             // steam = new SteamClient();
             // steam.Timeout = 5;
+            modsInCategory = Game.Mods;
             Log($"Loaded {SSF.Game.Name} with {Game.Mods.Count} mods.", Color.Green);
         }
 
@@ -67,7 +70,7 @@ namespace SSFModManager
         private void FillTabs(List<SSF.Mod> mods)
         {
             tabs_tags.TabPages.Clear();
-            tabs_tags.TabPages.Add(new TabPage() { Text = "All" });
+            tabs_tags.TabPages.Add(new TabPage() { Text = $"All ({Game.Mods.Count})" });
             var tags = new HashSet<string>();
             foreach (var mod in mods) {
                 if (mod.Tags is null) continue;
@@ -75,8 +78,8 @@ namespace SSFModManager
                     tags.Add(tag);
                 }
             }
-            foreach (var tag in tags) {
-                tabs_tags.TabPages.Add(new TabPage() { Text = tag });
+            foreach (var tag in tags.OrderBy(t => t).ToList()) {
+                tabs_tags.TabPages.Add(new TabPage() { Text = $"{tag} ({Game.Mods.Where(m => m.Tags.Contains(tag)).Count()})" });
             }
         }
 
@@ -86,6 +89,7 @@ namespace SSFModManager
             if (i < 0) return;
             var text = tabs_tags.TabPages[i].Text;
             if (text is null) return;
+            text = tabRegex.Match(text).Groups[1].Value;
             if (text != "All") modsInCategory = Game.Mods.Where(m => m.Tags.Contains(text)).ToList();
             else modsInCategory = Game.Mods;
             FillModList(modsInCategory);
@@ -213,7 +217,9 @@ namespace SSFModManager
         {
             var txt = txt_mods_filter.Text.ToLowerInvariant();
             List<SSF.Mod> matchingMods = modsInCategory;
-            if (!txt.IsNullOrEmpty()) matchingMods = matchingMods.Where(m => m.Name.ToLowerInvariant().Contains(txt)).ToList();
+            if (!txt.IsNullOrEmpty()) {
+                matchingMods = matchingMods.Where(m => m.Name.ToLowerInvariant().Contains(txt)).ToList();
+            }
             FillModList(matchingMods);
         }
     }
