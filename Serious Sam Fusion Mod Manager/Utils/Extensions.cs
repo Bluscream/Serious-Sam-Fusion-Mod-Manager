@@ -251,6 +251,11 @@ namespace SSFModManager
                 }
             }
         }
-#endregion
+        #endregion
+        #region bool
+        public static string ToYesNo(this bool input) => input ? "Yes" : "No";
+        public static string ToEnabledDisabled(this bool input) => input ? "Enabled" : "Disabled";
+        public static string ToOnOff(this bool input) => input ? "On" : "Off";
+        #endregion
     }
 }

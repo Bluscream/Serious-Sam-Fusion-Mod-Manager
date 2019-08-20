@@ -31,10 +31,10 @@
             this.components = new System.ComponentModel.Container();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.lst_mods = new System.Windows.Forms.ListBox();
-            this.txt_brief = new System.Windows.Forms.RichTextBox();
             this.menu_mods = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.openFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.disableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.txt_brief = new System.Windows.Forms.RichTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -66,18 +66,10 @@
             this.lst_mods.FormattingEnabled = true;
             this.lst_mods.Location = new System.Drawing.Point(0, 0);
             this.lst_mods.Name = "lst_mods";
+            this.lst_mods.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.lst_mods.Size = new System.Drawing.Size(294, 596);
             this.lst_mods.TabIndex = 0;
             this.lst_mods.SelectedIndexChanged += new System.EventHandler(this.Lst_mods_SelectedIndexChanged);
-            // 
-            // txt_brief
-            // 
-            this.txt_brief.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txt_brief.Location = new System.Drawing.Point(0, 0);
-            this.txt_brief.Name = "txt_brief";
-            this.txt_brief.Size = new System.Drawing.Size(584, 596);
-            this.txt_brief.TabIndex = 0;
-            this.txt_brief.Text = "";
             // 
             // menu_mods
             // 
@@ -91,16 +83,25 @@
             // openFolderToolStripMenuItem
             // 
             this.openFolderToolStripMenuItem.Name = "openFolderToolStripMenuItem";
-            this.openFolderToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.openFolderToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
             this.openFolderToolStripMenuItem.Text = "Open Folder";
             this.openFolderToolStripMenuItem.Click += new System.EventHandler(this.OpenFolderToolStripMenuItem_Click);
             // 
             // disableToolStripMenuItem
             // 
             this.disableToolStripMenuItem.Name = "disableToolStripMenuItem";
-            this.disableToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.disableToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
             this.disableToolStripMenuItem.Text = "Disable";
             this.disableToolStripMenuItem.Click += new System.EventHandler(this.DisableToolStripMenuItem_Click);
+            // 
+            // txt_brief
+            // 
+            this.txt_brief.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txt_brief.Location = new System.Drawing.Point(0, 0);
+            this.txt_brief.Name = "txt_brief";
+            this.txt_brief.Size = new System.Drawing.Size(584, 596);
+            this.txt_brief.TabIndex = 0;
+            this.txt_brief.Text = "";
             // 
             // MainForm
             // 

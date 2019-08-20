@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.Net.Http;
 
 using SteamSharp;
+using System.Collections.Generic;
 
 namespace SSFModManager
 {
@@ -14,7 +15,7 @@ namespace SSFModManager
         private SSF.Game game;
         // public SteamClient steam;
         private HttpClient webClient;
-        private void PreInit()
+        private async void PreInit()
         {
             var path = new Setup.PathLogic();
             var binPath = path.GetInstallationPath();
@@ -30,8 +31,9 @@ namespace SSFModManager
             Init();
         }
 
-        private void Init() {
+        private async void Init() {
             webClient = new HttpClient();
+            await game.UpdateModDetailsAsync(webClient);
             // steam = new SteamClient();
             // steam.Timeout = 5;
         }
@@ -46,10 +48,15 @@ namespace SSFModManager
         private void InitModList()
         {
             lst_mods.DataSource = game.Mods;
+            UpdateModList();
             return;
             foreach (var mod in game.Mods) {
                 lst_mods.Items.Add(mod);
             }
+        }
+
+        private void UpdateModList() {
+
         }
 
         private void Menu_mods_Opening(object sender, CancelEventArgs e)
@@ -73,10 +80,18 @@ namespace SSFModManager
         }
 
         private async void DisableToolStripMenuItem_Click(object sender, EventArgs e) {
-            var mod = (SSF.Mod)lst_mods.SelectedItems[0];
-            var details = await mod.UpdateModDetailsAsync(webClient);
-            Console.WriteLine(details.ToJson());
-            Console.WriteLine(mod.ToJson());
+            var menuItem = (ToolStripMenuItem)sender;
+            var state = (menuItem.Text == "Disable" ? true : false);
+            var mods = lst_mods.SelectedItems.Cast<SSF.Mod>().ToList();
+            mods.ForEach(m => m.Disabled = state);
+            if (mods.Count < 1) {
+                MessageBox.Show("No mods selected", Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            } else if (mods.Count > 1) {
+                MessageBox.Show($"{mods.Count} mods {(!mods.First().Disabled).ToEnabledDisabled()}", Text);
+            } else if (mods.Count == 1) {
+                var mod = mods.First();
+                MessageBox.Show($"{(!mod.Disabled).ToEnabledDisabled()} {mod.Name}", Text);
+            }
         }
     }
 }
