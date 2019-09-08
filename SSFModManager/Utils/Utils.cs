@@ -68,7 +68,7 @@ namespace SSFModManager
                 Process.Start(proc);
                 Exit();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // Logger.Error("Unable to restart as admin!", ex.Message);
                 MessageBox.Show("Unable to restart as admin for you. Please do this manually now!", "Can't restart as admin", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -84,11 +84,11 @@ namespace SSFModManager
                 WindowsPrincipal principal = new WindowsPrincipal(user);
                 isAdmin = principal.IsInRole(WindowsBuiltInRole.Administrator);
             }
-            catch (UnauthorizedAccessException ex)
+            catch (UnauthorizedAccessException)
             {
                 isAdmin = false;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 isAdmin = false;
             }

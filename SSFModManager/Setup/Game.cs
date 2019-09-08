@@ -45,12 +45,14 @@ namespace SSFModManager.Setup
         }
         private DirectoryInfo GetSteamLocation()
         {
-            try {
+            try
+            {
                 var steamFinder = new SteamFinder();
                 if (!steamFinder.FindSteam())
                     return null;
                 return new DirectoryInfo(steamFinder.FindGameFolder(SSF.Game.SteamAppId));
-            } catch (Exception ex) {
+            } catch (Exception)
+            {
                 return null;
             }
         }

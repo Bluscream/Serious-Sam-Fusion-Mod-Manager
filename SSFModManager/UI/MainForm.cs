@@ -20,7 +20,7 @@ namespace SSFModManager
         public HttpClient webClient;
         private ModDirWatcher ModDirWatcher;
         private List<SSF.Mod> modsInCategory;
-        private async void PreInit()
+        private void PreInit()
         {
             var path = new Setup.PathLogic();
             var binPath = path.GetInstallationPath();
@@ -34,6 +34,7 @@ namespace SSFModManager
         {
             PreInit();
             InitializeComponent();
+            // panel_modinfo = new UI.StackPanel(); // TODO: Get working?
             Init();
         }
 
@@ -79,7 +80,13 @@ namespace SSFModManager
                 }
             }
             foreach (var tag in tags.OrderBy(t => t).ToList()) {
-                tabs_tags.TabPages.Add(new TabPage() { Text = $"{tag} ({Game.Mods.Where(m => m.Tags.Contains(tag)).Count()})" });
+                var count = 0;
+                foreach (var mod in Game.Mods) {
+                    if (mod.Tags != null && mod.Tags.Contains(tag)) count += 1;
+                }
+                var text = $"{tag}";
+                if (count > 0) text += $" ({count})";
+                tabs_tags.TabPages.Add(new TabPage() { Text = text });
             }
         }
 
@@ -90,7 +97,12 @@ namespace SSFModManager
             var text = tabs_tags.TabPages[i].Text;
             if (text is null) return;
             text = tabRegex.Match(text).Groups[1].Value;
-            if (text != "All") modsInCategory = Game.Mods.Where(m => m.Tags.Contains(text)).ToList();
+            if (text != "All") {
+                modsInCategory = new List<SSF.Mod>();
+                foreach (var mod in Game.Mods.ToList()) {
+                    if (mod.Tags != null && mod.Tags.Contains(text)) modsInCategory.Add(mod);
+                }
+            } // modsInCategory = Game.Mods.Where(m => m.Tags.Contains(text)).ToList();
             else modsInCategory = Game.Mods;
             FillModList(modsInCategory);
             FilterByText();
@@ -119,7 +131,66 @@ namespace SSFModManager
         {
             if (lst_mods.SelectedItems.Count < 1) return;
             var mod = (SSF.Mod)lst_mods.SelectedItems[0];
+            FillMod(mod);
+        }
+
+        private void FillMod(SSF.Mod mod) {
             txt_brief.Text = mod.ToJson();
+            txt_mod_description.Text = mod.Details.description;
+            panel_modinfo.Controls.Clear();
+            var modDictionary = mod.GetType().GetProperties().ToDictionary( propertyInfo => propertyInfo.Name, propertyInfo => propertyInfo.GetValue(mod));
+            foreach (var item in modDictionary) {
+                FillModPart(item);
+            }
+        }
+
+        private void FillModPart(KeyValuePair<string, object> item, GroupBox parent = null) {
+            Control add_to;
+            if (parent is null) add_to = panel_modinfo;
+            else add_to = parent;
+            var labelText = item.Key.ToTitleCase();
+            if (item.Value is bool) {
+                add_to.Controls.Add(new CheckBox() { Text = labelText, Checked = (bool)item.Value, Enabled = false });
+            } else if (item.Value is IEnumerable<string>  || item.Value is IEnumerable<decimal>) { // || item.Value is IEnumerable<ushort> || item.Value is IEnumerable<short> || item.Value is IEnumerable<int> || item.Value is IEnumerable<long> || item.Value is IEnumerable<ulong>
+                    var box = new GroupBox() { Text = labelText };
+                    var listBox = new ListBox() { DataSource = item.Value, Dock = DockStyle.Fill };
+                    box.Controls.Add(listBox);
+                    add_to.Controls.Add(box);
+            } else if (item.Value is string) {
+                add_to.Controls.Add(GetModPartWithLabel(item.Key, new TextBox() { Text = (string)item.Value, ReadOnly = true }));
+            } else if (item.Value is decimal) { // ushort || item.Value is short || item.Value is int || item.Value is long || item.Value is ulong
+                add_to.Controls.Add(GetModPartWithLabel(item.Key, new NumericUpDown() { Value = (decimal)item.Value, ReadOnly = true }));
+            }  else {
+                var as_enumerable = item.Value as System.Collections.IEnumerable;
+                var as_dictionary = item.Value as System.Collections.IDictionary;
+                if (as_enumerable is null && as_dictionary is null) {
+                    var box = new GroupBox() { Text = labelText };
+                    box.Controls.Add(new TextBox() { Text = item.Value.ToJson(), ReadOnly = true, Multiline = true, Dock = DockStyle.Fill });
+                    add_to.Controls.Add(box);
+                } else {
+                    var box = new GroupBox() { Text = labelText };
+                    add_to.Controls.Add(box);
+                    foreach (var _item in as_dictionary)
+                    {
+                        var __item = (KeyValuePair<string, object>)_item;
+                        FillModPart(__item, box);
+                    }
+                }
+            }
+        }
+
+        private Panel GetModPartWithLabel(string labelText, Control control) {
+            var label = new Label() { Text = labelText + ":", Dock = DockStyle.Top };
+            control.Dock = DockStyle.Bottom;
+            var panel = new Panel() { };
+            panel.Controls.Add(label);
+            panel.Controls.Add(control);
+            return panel;
+        }
+
+        private void FillModPartList(System.Collections.IEnumerable enumerable, GroupBox parent = null) {
+            var listBox = new ListBox() { DataSource = enumerable };
+            parent.Controls.Add(listBox);
         }
 
         private void OpenFolderToolStripMenuItem_Click(object sender, EventArgs e) {
@@ -128,7 +199,7 @@ namespace SSFModManager
             Utils.OpenFolderInExplorer(mod.Directory);
         }
 
-        private async void DisableToolStripMenuItem_Click(object sender, EventArgs e) {
+        private void DisableToolStripMenuItem_Click(object sender, EventArgs e) {
             var menuItem = (ToolStripMenuItem)sender;
             var state = (menuItem.Text == "Disable" ? true : false);
             var mods = lst_mods.SelectedItems.Cast<SSF.Mod>().ToList();
@@ -168,9 +239,8 @@ namespace SSFModManager
             Utils.StartProcess(file);
         }
 
-        private void StartEditorToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
+        private void StartEditorToolStripMenuItem_Click(object sender, EventArgs e) {
+            Utils.StartProcess(Game.Binaries.Editor.File(Game, SSF.Architecture.WIN_64));
         }
 
         private void KillToolStripMenuItem_Click(object sender, EventArgs e)
@@ -209,18 +279,8 @@ namespace SSFModManager
         {
             if (!color.IsEmpty) status.ForeColor = color;
             string timestamp = DateTime.Now.ToString("HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture);
-            status.Text = $"[{timestamp}] {message}";
-        }
-
-        private void Txt_mods_filter_TextChanged(object sender, EventArgs e) => FilterByText();
-        private void FilterByText()
-        {
-            var txt = txt_mods_filter.Text.ToLowerInvariant();
-            List<SSF.Mod> matchingMods = modsInCategory;
-            if (!txt.IsNullOrEmpty()) {
-                matchingMods = matchingMods.Where(m => m.Name.ToLowerInvariant().Contains(txt)).ToList();
-            }
-            FillModList(matchingMods);
+            lbl_status.Text = $"[{timestamp}] {message}";
+            // status.Invalidate(); status.Refresh();
         }
     }
 }

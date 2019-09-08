@@ -12,6 +12,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Globalization;
 
 namespace SSFModManager
 {
@@ -83,6 +84,9 @@ namespace SSFModManager
         }
 #endregion
  #region String
+        public static string ToTitleCase(this string source, string langCode = "en-US") {
+            return new CultureInfo(langCode, false).TextInfo.ToTitleCase(source);
+        }
         public static bool Contains(this string source, string toCheck, StringComparison comp)
         {
             return source?.IndexOf(toCheck, comp) >= 0;

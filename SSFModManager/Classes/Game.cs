@@ -57,9 +57,7 @@ namespace SSF
         }
         public bool Running()
         {
-            if (Binaries.Main.Running()) return true;
-            if (Binaries.Modded.Running()) return true;
-            return false;
+            return (Binaries.Main.Running() || Binaries.Modded.Running());
         }
         public List<DirectoryInfo> GetModsDirs(bool force = true)
         {
@@ -98,7 +96,9 @@ namespace SSF
             foreach (var details in parsedResponse.response.publishedfiledetails) {
                 Mods.Where(t => t.Id == details.publishedfileid).First().Details = details;
             }
-            OnDetailsLoaded?.Invoke(this);
+            try {
+                OnDetailsLoaded?.Invoke(this);
+            } catch (Exception ex) { Console.WriteLine("[ERROR] UpdateModDetailsAsync: {0}", ex.Message); }
             return parsedResponse;
         }
     }

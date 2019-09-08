@@ -57,7 +57,7 @@ namespace SSF
             public FileWithHash Thumbnail { get; set; }
             public Publishedfiledetail Details { get; set; }
             public List<string> Tags { get {
-                if (Details is null) return null;
+                if (Details is null || Details.tags is null) return null;
                 var ret = new List<string>();
                 foreach (var tag in Details.tags) {
                     ret.Add(tag.tag);
@@ -102,6 +102,7 @@ namespace SSF
                     break;
                     // } catch (Exception ex) { Console.WriteLine(ex.Message); }
                 }
+                // decimal.TryParse(directory.Name, )
                 Id = directory.Name;
                 Directory = directory;
                 Game = game;
