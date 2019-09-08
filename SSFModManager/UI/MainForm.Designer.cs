@@ -38,6 +38,9 @@
             this.disableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabs_modinfo = new System.Windows.Forms.TabControl();
             this.tab_modinfo = new System.Windows.Forms.TabPage();
+            this.panel_modinfo = new System.Windows.Forms.FlowLayoutPanel();
+            this.tab_modinfo_description = new System.Windows.Forms.TabPage();
+            this.txt_mod_description = new System.Windows.Forms.RichTextBox();
             this.tab_modinfo_raw = new System.Windows.Forms.TabPage();
             this.txt_brief = new System.Windows.Forms.RichTextBox();
             this.menu_main = new System.Windows.Forms.MenuStrip();
@@ -51,6 +54,8 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.searchInNames = new System.Windows.Forms.ToolStripMenuItem();
             this.searchInDescriptions = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.onlyShowDisabled = new System.Windows.Forms.ToolStripMenuItem();
             this.debugToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openDisabledFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -59,9 +64,6 @@
             this.tab_all = new System.Windows.Forms.TabPage();
             this.status = new System.Windows.Forms.StatusStrip();
             this.lbl_status = new System.Windows.Forms.ToolStripStatusLabel();
-            this.tab_modinfo_description = new System.Windows.Forms.TabPage();
-            this.panel_modinfo = new System.Windows.Forms.FlowLayoutPanel();
-            this.txt_mod_description = new System.Windows.Forms.RichTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -69,11 +71,11 @@
             this.menu_mods.SuspendLayout();
             this.tabs_modinfo.SuspendLayout();
             this.tab_modinfo.SuspendLayout();
+            this.tab_modinfo_description.SuspendLayout();
             this.tab_modinfo_raw.SuspendLayout();
             this.menu_main.SuspendLayout();
             this.tabs_tags.SuspendLayout();
             this.status.SuspendLayout();
-            this.tab_modinfo_description.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -167,6 +169,35 @@
             this.tab_modinfo.Text = "Infos";
             this.tab_modinfo.UseVisualStyleBackColor = true;
             // 
+            // panel_modinfo
+            // 
+            this.panel_modinfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel_modinfo.Location = new System.Drawing.Point(3, 3);
+            this.panel_modinfo.Name = "panel_modinfo";
+            this.panel_modinfo.Size = new System.Drawing.Size(554, 490);
+            this.panel_modinfo.TabIndex = 0;
+            // 
+            // tab_modinfo_description
+            // 
+            this.tab_modinfo_description.Controls.Add(this.txt_mod_description);
+            this.tab_modinfo_description.Location = new System.Drawing.Point(4, 22);
+            this.tab_modinfo_description.Name = "tab_modinfo_description";
+            this.tab_modinfo_description.Padding = new System.Windows.Forms.Padding(3);
+            this.tab_modinfo_description.Size = new System.Drawing.Size(560, 496);
+            this.tab_modinfo_description.TabIndex = 2;
+            this.tab_modinfo_description.Text = "Description";
+            this.tab_modinfo_description.UseVisualStyleBackColor = true;
+            // 
+            // txt_mod_description
+            // 
+            this.txt_mod_description.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txt_mod_description.Location = new System.Drawing.Point(3, 3);
+            this.txt_mod_description.Name = "txt_mod_description";
+            this.txt_mod_description.ReadOnly = true;
+            this.txt_mod_description.Size = new System.Drawing.Size(554, 490);
+            this.txt_mod_description.TabIndex = 1;
+            this.txt_mod_description.Text = "";
+            // 
             // tab_modinfo_raw
             // 
             this.tab_modinfo_raw.Controls.Add(this.txt_brief);
@@ -246,7 +277,9 @@
             this.searchInEverything,
             this.toolStripSeparator1,
             this.searchInNames,
-            this.searchInDescriptions});
+            this.searchInDescriptions,
+            this.toolStripSeparator2,
+            this.onlyShowDisabled});
             this.menu_filters.Name = "menu_filters";
             this.menu_filters.Size = new System.Drawing.Size(48, 21);
             this.menu_filters.Text = "Filter";
@@ -278,6 +311,18 @@
             this.searchInDescriptions.Size = new System.Drawing.Size(201, 22);
             this.searchInDescriptions.Text = "Search in Descriptions";
             this.searchInDescriptions.Click += new System.EventHandler(this.FilterMenuItem_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(198, 6);
+            // 
+            // onlyShowDisabled
+            // 
+            this.onlyShowDisabled.Name = "onlyShowDisabled";
+            this.onlyShowDisabled.Size = new System.Drawing.Size(201, 22);
+            this.onlyShowDisabled.Text = "Only Show Disabled";
+            this.onlyShowDisabled.Click += new System.EventHandler(this.OnlyShowDisabled_Click);
             // 
             // debugToolStripMenuItem
             // 
@@ -342,37 +387,7 @@
             // lbl_status
             // 
             this.lbl_status.Name = "lbl_status";
-            this.lbl_status.Size = new System.Drawing.Size(127, 17);
-            this.lbl_status.Text = "toolStripStatusLabel1";
-            // 
-            // tab_modinfo_description
-            // 
-            this.tab_modinfo_description.Controls.Add(this.txt_mod_description);
-            this.tab_modinfo_description.Location = new System.Drawing.Point(4, 22);
-            this.tab_modinfo_description.Name = "tab_modinfo_description";
-            this.tab_modinfo_description.Padding = new System.Windows.Forms.Padding(3);
-            this.tab_modinfo_description.Size = new System.Drawing.Size(560, 496);
-            this.tab_modinfo_description.TabIndex = 2;
-            this.tab_modinfo_description.Text = "Description";
-            this.tab_modinfo_description.UseVisualStyleBackColor = true;
-            // 
-            // panel_modinfo
-            // 
-            this.panel_modinfo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel_modinfo.Location = new System.Drawing.Point(3, 3);
-            this.panel_modinfo.Name = "panel_modinfo";
-            this.panel_modinfo.Size = new System.Drawing.Size(554, 490);
-            this.panel_modinfo.TabIndex = 0;
-            // 
-            // txt_mod_description
-            // 
-            this.txt_mod_description.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txt_mod_description.Location = new System.Drawing.Point(3, 3);
-            this.txt_mod_description.Name = "txt_mod_description";
-            this.txt_mod_description.ReadOnly = true;
-            this.txt_mod_description.Size = new System.Drawing.Size(554, 490);
-            this.txt_mod_description.TabIndex = 1;
-            this.txt_mod_description.Text = "";
+            this.lbl_status.Size = new System.Drawing.Size(0, 17);
             // 
             // MainForm
             // 
@@ -398,13 +413,13 @@
             this.menu_mods.ResumeLayout(false);
             this.tabs_modinfo.ResumeLayout(false);
             this.tab_modinfo.ResumeLayout(false);
+            this.tab_modinfo_description.ResumeLayout(false);
             this.tab_modinfo_raw.ResumeLayout(false);
             this.menu_main.ResumeLayout(false);
             this.menu_main.PerformLayout();
             this.tabs_tags.ResumeLayout(false);
             this.status.ResumeLayout(false);
             this.status.PerformLayout();
-            this.tab_modinfo_description.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -443,6 +458,8 @@
         private System.Windows.Forms.FlowLayoutPanel panel_modinfo;
         private System.Windows.Forms.TabPage tab_modinfo_description;
         private System.Windows.Forms.RichTextBox txt_mod_description;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripMenuItem onlyShowDisabled;
     }
 }
 

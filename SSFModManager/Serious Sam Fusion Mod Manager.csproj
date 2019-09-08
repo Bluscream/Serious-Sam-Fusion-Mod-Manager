@@ -6,7 +6,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{53E38B43-8829-4BE5-87D4-DB147E09463C}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <RootNamespace>SSFModManager</RootNamespace>
     <AssemblyName>SSFModManager</AssemblyName>
     <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>

@@ -8,22 +8,30 @@ using System.Windows.Forms;
 namespace SSFModManager
 {
     public partial class MainForm {
+
+        private void OnlyShowDisabled_Click(object sender, EventArgs e)
+        {
+            onlyShowDisabled.Checked = !onlyShowDisabled.Checked;
+            FilterByText();
+        }
         private void FilterMenuItem_Click(object sender, EventArgs e) => SwitchFilter((ToolStripMenuItem)sender);
         private void SwitchFilter(ToolStripMenuItem selectedMenuItem) {
+            selectedMenuItem.Checked ^= true;
+            List<ToolStripMenuItem> filterItems = new List<ToolStripMenuItem>();
+                foreach (var ltoolStripMenuItem in from object item in selectedMenuItem.Owner.Items
+                        let ltoolStripMenuItem = item as ToolStripMenuItem where ltoolStripMenuItem != null select ltoolStripMenuItem) {
+                    if (ltoolStripMenuItem.Name != "onlyShowDisabled")
+                        filterItems.Add(ltoolStripMenuItem);
+            }
+
             if (selectedMenuItem.Name == "searchInEverything") {
-                foreach (var ltoolStripMenuItem in from object item in selectedMenuItem.Owner.Items 
-                        let ltoolStripMenuItem = item as ToolStripMenuItem where ltoolStripMenuItem != null select ltoolStripMenuItem)
+                foreach (var ltoolStripMenuItem in filterItems)
                     ltoolStripMenuItem.Checked = true;
             } else {
-                selectedMenuItem.Checked = true;
-                foreach (var ltoolStripMenuItem in from object item in selectedMenuItem.Owner.Items 
-                        let ltoolStripMenuItem = item as ToolStripMenuItem
-                        where ltoolStripMenuItem != null 
-                        where !item.Equals(selectedMenuItem) 
-                        select ltoolStripMenuItem)
-                    ltoolStripMenuItem.Checked = false;
+                foreach (var item in filterItems.Where(item => !item.Equals(selectedMenuItem))) item.Checked = false;
             }
             selectedMenuItem.Owner.Show();
+            FilterByText();
         }
 
         private void Txt_mods_filter_TextChanged(object sender, EventArgs e) => FilterByText();
@@ -41,6 +49,7 @@ namespace SSFModManager
                     }
                 }
             } else { matchingMods.AddRange(modsInCategory); }
+            if (onlyShowDisabled.Checked) matchingMods = matchingMods.Where(m => m.Disabled).ToList();
             FillModList(matchingMods);
         }
     }
