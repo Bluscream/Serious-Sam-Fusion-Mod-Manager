@@ -139,6 +139,7 @@ namespace SSFModManager
             txt_mod_description.Text = mod.Details.description;
             panel_modinfo.Controls.Clear();
             var modDictionary = mod.GetType().GetProperties().ToDictionary( propertyInfo => propertyInfo.Name, propertyInfo => propertyInfo.GetValue(mod));
+            // Dictionary<string, object> modDictionary = mod.ToDictionary();
             foreach (var item in modDictionary) {
                 FillModPart(item);
             }
