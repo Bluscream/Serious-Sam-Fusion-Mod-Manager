@@ -48,12 +48,12 @@ namespace SSF
                     }
                 }
             }
-            public string Id { get; set; }
-            public DirectoryInfo Directory { get; set; }
-            public string WorkshopVersion { get; set; }
-            public string Name { get; set; }
-            public string Uuid { get; set; }
-            public FileWithHash GroFile { get; set; }
+            public string Id { get; set; } = "<NO ID>";
+        public DirectoryInfo Directory { get; set; }
+            public string WorkshopVersion { get; set; } = "0";
+        public string Name { get; set; } = "<NO NAME>";
+            public string Uuid { get; set; } = "<NO UUID";
+        public FileWithHash GroFile { get; set; }
             public FileWithHash Thumbnail { get; set; }
             public Publishedfiledetail Details { get; set; }
             public List<string> Tags { get {

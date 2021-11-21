@@ -78,7 +78,7 @@ namespace SSF
             foreach (var modDir in Directory.GetDirectories(modsDir.FullName)) {
                 var ModDir = new DirectoryInfo(modDir);
                 var mod = new Mod(ModDir, this);
-                mods.Add(mod);
+                if(mod.Id != "386670448") mods.Add(mod);
             }
             return mods;
         }

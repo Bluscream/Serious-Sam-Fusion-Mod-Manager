@@ -11,7 +11,14 @@ namespace SSFModManager
 
         private void OnlyShowDisabled_Click(object sender, EventArgs e)
         {
+            onlyShowEnabled.Checked = onlyShowDisabled.Checked;
             onlyShowDisabled.Checked = !onlyShowDisabled.Checked;
+            FilterByText();
+        }
+        private void OnlyShowEnabled_Click(object sender, EventArgs e)
+        {
+            onlyShowDisabled.Checked = onlyShowEnabled.Checked;
+            onlyShowEnabled.Checked = !onlyShowEnabled.Checked;
             FilterByText();
         }
         private void FilterMenuItem_Click(object sender, EventArgs e) => SwitchFilter((ToolStripMenuItem)sender);
@@ -50,6 +57,7 @@ namespace SSFModManager
                 }
             } else { matchingMods.AddRange(modsInCategory); }
             if (onlyShowDisabled.Checked) matchingMods = matchingMods.Where(m => m.Disabled).ToList();
+            else if (onlyShowEnabled.Checked) matchingMods = matchingMods.Where(m => !m.Disabled).ToList();
             FillModList(matchingMods);
         }
     }

@@ -9,6 +9,7 @@ using System.Net.Http;
 using SteamSharp;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Threading;
 
 namespace SSFModManager
 {
@@ -19,7 +20,7 @@ namespace SSFModManager
         // public SteamClient steam;
         public HttpClient webClient;
         private ModDirWatcher ModDirWatcher;
-        private List<SSF.Mod> modsInCategory;
+        private List<SSF.Mod> modsInCategory = new List<SSF.Mod>();
         private void PreInit()
         {
             var path = new Setup.PathLogic();
@@ -38,27 +39,29 @@ namespace SSFModManager
             Init();
         }
 
-        private async void Init() {
-            webClient = new HttpClient();
+        private async void Init()
+        {
             Game.OnDetailsLoaded += Game_OnDetailsLoaded;
+            webClient = new HttpClient();
             await Game.UpdateModDetailsAsync(webClient);
-            // if (_ != null) FillTabs(Game.Mods);
             // steam = new SteamClient();
             // steam.Timeout = 5;
+            InitModList();
             modsInCategory = Game.Mods;
             Log($"Loaded {SSF.Game.Name} with {Game.Mods.Count} mods.", Color.Green);
         }
 
         private void Game_OnDetailsLoaded(object sender)
         {
-            InitModList();
+            // InitModList();
         }
 
         private void MainForm_Load(object sender, EventArgs e)
         {
             // Console.WriteLine(game.Mods.Where(t => t.Disabled).ToJson());
+            /*Thread.Sleep(TimeSpan.FromSeconds(1));
+            */
             txt_brief.Text = Game.ToJson();
-            InitModList();
         }
 
         public void InitModList()
@@ -111,7 +114,14 @@ namespace SSFModManager
         private void FillModList(List<SSF.Mod> mods) {
             lst_mods.Items.Clear();
             foreach (var mod in mods.OrderBy(m => m.Name)) {
-                lst_mods.Items.Add(mod);
+                try { 
+                    if (mod.ToString() != null) lst_mods.Items.Add(mod);
+                }
+                catch (OutOfMemoryException ex)
+                {
+                    this.Text = $"{ex.Message} ( {mods.Count} / {lst_mods.Items.Count} )";
+                    // break;
+                }
             }
             // lst_mods.SelectedIndex = 0;
         }
@@ -121,9 +131,9 @@ namespace SSFModManager
             if (lst_mods.SelectedItems.Count < 1) { e.Cancel = true; return; }
             var mod = (SSF.Mod)lst_mods.SelectedItems[0];
             if (mod == null) { e.Cancel = true; return; }
-            if (lst_mods.SelectedItems.Count > 1) {
-                openFolderToolStripMenuItem.Visible = false;
-            }
+            var oneSelected = (lst_mods.SelectedItems.Count == 1);
+            openFolderToolStripMenuItem.Visible = oneSelected;
+            workshopToolStripMenuItem.Visible = oneSelected;
             menu_mods.Items[1].Text = mod.Disabled ? "Enable" : "Disable";
         }
 
@@ -136,7 +146,7 @@ namespace SSFModManager
 
         private void FillMod(SSF.Mod mod) {
             txt_brief.Text = mod.ToJson();
-            txt_mod_description.Text = mod.Details.description;
+            txt_mod_description.Text = mod.Details?.description ?? String.Empty;
             panel_modinfo.Controls.Clear();
             var modDictionary = mod.GetType().GetProperties().ToDictionary( propertyInfo => propertyInfo.Name, propertyInfo => propertyInfo.GetValue(mod));
             // Dictionary<string, object> modDictionary = mod.ToDictionary();
@@ -282,6 +292,15 @@ namespace SSFModManager
             string timestamp = DateTime.Now.ToString("HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture);
             lbl_status.Text = $"[{timestamp}] {message}";
             // status.Invalidate(); status.Refresh();
+        }
+
+        private void onLinkClicked(object sender, EventArgs e) => Utils.StartProcess(((ToolStripMenuItem)sender).Tag as string);
+
+        private void workshopToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var mod = (SSF.Mod)lst_mods.SelectedItems[0];
+            if (mod == null) return;
+            Utils.StartProcess($"steam://openurl/https://steamcommunity.com/sharedfiles/filedetails/?id={mod.Details.publishedfileid}");
         }
     }
 }

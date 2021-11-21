@@ -56,6 +56,11 @@
             this.searchInDescriptions = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.onlyShowDisabled = new System.Windows.Forms.ToolStripMenuItem();
+            this.onlyShowEnabled = new System.Windows.Forms.ToolStripMenuItem();
+            this.SteamToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.campaignsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.weaponsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.debugToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openDisabledFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -64,6 +69,7 @@
             this.tab_all = new System.Windows.Forms.TabPage();
             this.status = new System.Windows.Forms.StatusStrip();
             this.lbl_status = new System.Windows.Forms.ToolStripStatusLabel();
+            this.workshopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -127,22 +133,23 @@
             // 
             this.menu_mods.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openFolderToolStripMenuItem,
-            this.disableToolStripMenuItem});
+            this.disableToolStripMenuItem,
+            this.workshopToolStripMenuItem});
             this.menu_mods.Name = "menu_mods";
-            this.menu_mods.Size = new System.Drawing.Size(145, 48);
+            this.menu_mods.Size = new System.Drawing.Size(181, 92);
             this.menu_mods.Opening += new System.ComponentModel.CancelEventHandler(this.Menu_mods_Opening);
             // 
             // openFolderToolStripMenuItem
             // 
             this.openFolderToolStripMenuItem.Name = "openFolderToolStripMenuItem";
-            this.openFolderToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.openFolderToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
             this.openFolderToolStripMenuItem.Text = "Open Folder";
             this.openFolderToolStripMenuItem.Click += new System.EventHandler(this.OpenFolderToolStripMenuItem_Click);
             // 
             // disableToolStripMenuItem
             // 
             this.disableToolStripMenuItem.Name = "disableToolStripMenuItem";
-            this.disableToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.disableToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
             this.disableToolStripMenuItem.Text = "Disable";
             this.disableToolStripMenuItem.Click += new System.EventHandler(this.DisableToolStripMenuItem_Click);
             // 
@@ -223,12 +230,13 @@
             this.menu_main.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.gameToolStripMenuItem,
             this.menu_filters,
+            this.SteamToolStripMenuItem,
             this.debugToolStripMenuItem,
             this.helpToolStripMenuItem,
             this.reloadToolStripMenuItem1});
             this.menu_main.Location = new System.Drawing.Point(0, 0);
             this.menu_main.Name = "menu_main";
-            this.menu_main.Size = new System.Drawing.Size(882, 25);
+            this.menu_main.Size = new System.Drawing.Size(882, 24);
             this.menu_main.TabIndex = 2;
             this.menu_main.Text = "Main Menu";
             // 
@@ -240,34 +248,34 @@
             this.focusToolStripMenuItem,
             this.startEditorToolStripMenuItem});
             this.gameToolStripMenuItem.Name = "gameToolStripMenuItem";
-            this.gameToolStripMenuItem.Size = new System.Drawing.Size(54, 21);
+            this.gameToolStripMenuItem.Size = new System.Drawing.Size(50, 20);
             this.gameToolStripMenuItem.Text = "Game";
             // 
             // startToolStripMenuItem
             // 
             this.startToolStripMenuItem.Name = "startToolStripMenuItem";
-            this.startToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.startToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
             this.startToolStripMenuItem.Text = "Start (Modded)";
             this.startToolStripMenuItem.Click += new System.EventHandler(this.StartToolStripMenuItem_Click);
             // 
             // killToolStripMenuItem
             // 
             this.killToolStripMenuItem.Name = "killToolStripMenuItem";
-            this.killToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.killToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
             this.killToolStripMenuItem.Text = "Kill";
             this.killToolStripMenuItem.Click += new System.EventHandler(this.KillToolStripMenuItem_Click);
             // 
             // focusToolStripMenuItem
             // 
             this.focusToolStripMenuItem.Name = "focusToolStripMenuItem";
-            this.focusToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.focusToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
             this.focusToolStripMenuItem.Text = "Focus";
             this.focusToolStripMenuItem.Click += new System.EventHandler(this.FocusToolStripMenuItem_Click);
             // 
             // startEditorToolStripMenuItem
             // 
             this.startEditorToolStripMenuItem.Name = "startEditorToolStripMenuItem";
-            this.startEditorToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.startEditorToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
             this.startEditorToolStripMenuItem.Text = "Start Editor";
             this.startEditorToolStripMenuItem.Click += new System.EventHandler(this.StartEditorToolStripMenuItem_Click);
             // 
@@ -279,76 +287,120 @@
             this.searchInNames,
             this.searchInDescriptions,
             this.toolStripSeparator2,
-            this.onlyShowDisabled});
+            this.onlyShowDisabled,
+            this.onlyShowEnabled});
             this.menu_filters.Name = "menu_filters";
-            this.menu_filters.Size = new System.Drawing.Size(48, 21);
+            this.menu_filters.Size = new System.Drawing.Size(45, 20);
             this.menu_filters.Text = "Filter";
             // 
             // searchInEverything
             // 
             this.searchInEverything.Name = "searchInEverything";
-            this.searchInEverything.Size = new System.Drawing.Size(201, 22);
+            this.searchInEverything.Size = new System.Drawing.Size(190, 22);
             this.searchInEverything.Text = "Search in Everything";
             this.searchInEverything.Click += new System.EventHandler(this.FilterMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(198, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(187, 6);
             // 
             // searchInNames
             // 
             this.searchInNames.Checked = true;
             this.searchInNames.CheckState = System.Windows.Forms.CheckState.Checked;
             this.searchInNames.Name = "searchInNames";
-            this.searchInNames.Size = new System.Drawing.Size(201, 22);
+            this.searchInNames.Size = new System.Drawing.Size(190, 22);
             this.searchInNames.Text = "Search in Names";
             this.searchInNames.Click += new System.EventHandler(this.FilterMenuItem_Click);
             // 
             // searchInDescriptions
             // 
             this.searchInDescriptions.Name = "searchInDescriptions";
-            this.searchInDescriptions.Size = new System.Drawing.Size(201, 22);
+            this.searchInDescriptions.Size = new System.Drawing.Size(190, 22);
             this.searchInDescriptions.Text = "Search in Descriptions";
             this.searchInDescriptions.Click += new System.EventHandler(this.FilterMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(198, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(187, 6);
             // 
             // onlyShowDisabled
             // 
             this.onlyShowDisabled.Name = "onlyShowDisabled";
-            this.onlyShowDisabled.Size = new System.Drawing.Size(201, 22);
+            this.onlyShowDisabled.Size = new System.Drawing.Size(190, 22);
             this.onlyShowDisabled.Text = "Only Show Disabled";
             this.onlyShowDisabled.Click += new System.EventHandler(this.OnlyShowDisabled_Click);
+            // 
+            // onlyShowEnabled
+            // 
+            this.onlyShowEnabled.Name = "onlyShowEnabled";
+            this.onlyShowEnabled.Size = new System.Drawing.Size(190, 22);
+            this.onlyShowEnabled.Text = "Only Show Enabled";
+            this.onlyShowEnabled.Click += new System.EventHandler(this.OnlyShowEnabled_Click);
+            // 
+            // SteamToolStripMenuItem
+            // 
+            this.SteamToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.openToolStripMenuItem,
+            this.campaignsToolStripMenuItem,
+            this.weaponsToolStripMenuItem});
+            this.SteamToolStripMenuItem.Name = "SteamToolStripMenuItem";
+            this.SteamToolStripMenuItem.Size = new System.Drawing.Size(52, 20);
+            this.SteamToolStripMenuItem.Text = "Steam";
+            // 
+            // openToolStripMenuItem
+            // 
+            this.openToolStripMenuItem.Name = "openToolStripMenuItem";
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.openToolStripMenuItem.Tag = "steam://openurl/https://steamcommunity.com/app/564310/workshop/";
+            this.openToolStripMenuItem.Text = "Workshop";
+            this.openToolStripMenuItem.Click += new System.EventHandler(this.onLinkClicked);
+            // 
+            // campaignsToolStripMenuItem
+            // 
+            this.campaignsToolStripMenuItem.Name = "campaignsToolStripMenuItem";
+            this.campaignsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.campaignsToolStripMenuItem.Tag = "steam://openurl/https://steamcommunity.com/workshop/browse/?appid=564310&required" +
+    "tags%5B0%5D=Custom+Campaign&actualsort=totaluniquesubscribers&browsesort=totalun" +
+    "iquesubscribers&p=1";
+            this.campaignsToolStripMenuItem.Text = "Campaigns";
+            this.campaignsToolStripMenuItem.Click += new System.EventHandler(this.onLinkClicked);
+            // 
+            // weaponsToolStripMenuItem
+            // 
+            this.weaponsToolStripMenuItem.Name = "weaponsToolStripMenuItem";
+            this.weaponsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.weaponsToolStripMenuItem.Tag = resources.GetString("weaponsToolStripMenuItem.Tag");
+            this.weaponsToolStripMenuItem.Text = "Weapons";
+            this.weaponsToolStripMenuItem.Click += new System.EventHandler(this.onLinkClicked);
             // 
             // debugToolStripMenuItem
             // 
             this.debugToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openDisabledFolderToolStripMenuItem});
             this.debugToolStripMenuItem.Name = "debugToolStripMenuItem";
-            this.debugToolStripMenuItem.Size = new System.Drawing.Size(57, 21);
+            this.debugToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
             this.debugToolStripMenuItem.Text = "Debug";
             // 
             // openDisabledFolderToolStripMenuItem
             // 
             this.openDisabledFolderToolStripMenuItem.Name = "openDisabledFolderToolStripMenuItem";
-            this.openDisabledFolderToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
+            this.openDisabledFolderToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
             this.openDisabledFolderToolStripMenuItem.Text = "Open Disabled Folder";
             this.openDisabledFolderToolStripMenuItem.Click += new System.EventHandler(this.OpenDisabledFolderToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(46, 21);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.helpToolStripMenuItem.Text = "Help";
             // 
             // reloadToolStripMenuItem1
             // 
             this.reloadToolStripMenuItem1.Name = "reloadToolStripMenuItem1";
-            this.reloadToolStripMenuItem1.Size = new System.Drawing.Size(58, 21);
+            this.reloadToolStripMenuItem1.Size = new System.Drawing.Size(55, 20);
             this.reloadToolStripMenuItem1.Text = "Reload";
             this.reloadToolStripMenuItem1.Click += new System.EventHandler(this.ReloadToolStripMenuItem1_Click);
             // 
@@ -388,6 +440,13 @@
             // 
             this.lbl_status.Name = "lbl_status";
             this.lbl_status.Size = new System.Drawing.Size(0, 17);
+            // 
+            // workshopToolStripMenuItem
+            // 
+            this.workshopToolStripMenuItem.Name = "workshopToolStripMenuItem";
+            this.workshopToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.workshopToolStripMenuItem.Text = "Workshop";
+            this.workshopToolStripMenuItem.Click += new System.EventHandler(this.workshopToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -460,6 +519,12 @@
         private System.Windows.Forms.RichTextBox txt_mod_description;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem onlyShowDisabled;
+        private System.Windows.Forms.ToolStripMenuItem onlyShowEnabled;
+        private System.Windows.Forms.ToolStripMenuItem SteamToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem campaignsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem weaponsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem workshopToolStripMenuItem;
     }
 }
 
