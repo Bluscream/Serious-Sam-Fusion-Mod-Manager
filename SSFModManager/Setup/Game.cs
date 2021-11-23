@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Management;
 using System.Windows.Forms;
 using VRCModManager.Dependencies;
-using Microsoft.Win32;
 
 namespace SSFModManager.Setup
 {
@@ -14,16 +10,20 @@ namespace SSFModManager.Setup
         public DirectoryInfo GetInstallationPath()
         {
             var steam = GetSteamLocation();
-            if (steam != null) {
-                if (steam.Exists) {
-                    if (steam.CombineFile(SSF.Game.AppFileName).Exists) {
+            if (steam != null)
+            {
+                if (steam.Exists)
+                {
+                    if (steam.CombineFile(SSF.Game.AppFileName).Exists)
+                    {
                         return steam;
                     }
                 }
             }
 
             var local = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
-            if (local.CombineFile(SSF.Game.AppFileName).Exists) {
+            if (local.CombineFile(SSF.Game.AppFileName).Exists)
+            {
                 return local;
             }
 
@@ -51,7 +51,8 @@ namespace SSFModManager.Setup
                 if (!steamFinder.FindSteam())
                     return null;
                 return new DirectoryInfo(steamFinder.FindGameFolder(SSF.Game.SteamAppId));
-            } catch (Exception)
+            }
+            catch (Exception)
             {
                 return null;
             }
@@ -117,19 +118,19 @@ namespace SSFModManager.Setup
                 folderDialog.RootFolder = Environment.SpecialFolder.MyComputer;
                 folderDialog.ShowNewFolderButton = false;
                 var result = folderDialog.ShowDialog();
-                    if (result == DialogResult.Cancel) { Application.Exit(); }
-                    else if (result == DialogResult.OK)
+                if (result == DialogResult.Cancel) { Application.Exit(); }
+                else if (result == DialogResult.OK)
+                {
+                    string path = folderDialog.SelectedPath;
+                    if (File.Exists(Path.Combine(path, SSF.Game.AppFileName)))
                     {
-                        string path = folderDialog.SelectedPath;
-                        if (File.Exists(Path.Combine(path, SSF.Game.AppFileName)))
-                        {
-                            return folderDialog.SelectedPath;
-                        }
-                        else
-                        {
-                            MessageBox.Show($"The directory you selected doesn't contain {SSF.Game.AppFileName}! please try again!", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
+                        return folderDialog.SelectedPath;
                     }
+                    else
+                    {
+                        MessageBox.Show($"The directory you selected doesn't contain {SSF.Game.AppFileName}! please try again!", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
             }
             return string.Empty;
         }

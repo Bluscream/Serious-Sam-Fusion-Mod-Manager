@@ -2,8 +2,10 @@
 using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -12,72 +14,70 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Globalization;
-using System.Collections.ObjectModel;
 
 namespace SSFModManager
 {
     static class Extensions
     {
         #region Reflection
-        
-  public static Dictionary<string, object> ToDictionary(this object instanceToConvert)
-  {
-    return instanceToConvert.GetType()
-      .GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static)
-      .ToDictionary(
-      propertyInfo => propertyInfo.Name,
-      propertyInfo => Extensions.ConvertPropertyToDictionary(propertyInfo, instanceToConvert));
 
-  }
-
-  private static object ConvertPropertyToDictionary(PropertyInfo propertyInfo, object owner)
-  {
-    Type propertyType = propertyInfo.PropertyType;
-    object propertyValue = propertyInfo.GetValue(owner);
-
-    // If property is a collection don't traverse collection properties but the items instead
-    if (!propertyType.Equals(typeof(string)) && (typeof(ICollection<>).Name.Equals(propertyValue.GetType().BaseType.Name) || typeof(Collection<>).Name.Equals(propertyValue.GetType().BaseType.Name)))
-    {
-      var collectionItems = new List<Dictionary<string, object>>();
-      var count = (int) propertyType.GetProperty("Count").GetValue(propertyValue);
-      PropertyInfo indexerProperty = propertyType.GetProperty("Item");
-
-      // Convert collection items to dictionary
-      for (var index = 0; index < count; index++)
-      {
-        object item = indexerProperty.GetValue(propertyValue, new object[] { index });
-        PropertyInfo[] itemProperties = item.GetType().GetProperties(BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance);
-
-        if (itemProperties.Any())
+        public static Dictionary<string, object> ToDictionary(this object instanceToConvert)
         {
-          Dictionary<string, object> dictionary = itemProperties
-            .ToDictionary(
-              subtypePropertyInfo => subtypePropertyInfo.Name,
-              subtypePropertyInfo => Extensions.ConvertPropertyToDictionary(subtypePropertyInfo, item));
-          collectionItems.Add(dictionary);
+            return instanceToConvert.GetType()
+              .GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static)
+              .ToDictionary(
+              propertyInfo => propertyInfo.Name,
+              propertyInfo => Extensions.ConvertPropertyToDictionary(propertyInfo, instanceToConvert));
+
         }
-      }
 
-      return collectionItems;
-    }
+        private static object ConvertPropertyToDictionary(PropertyInfo propertyInfo, object owner)
+        {
+            Type propertyType = propertyInfo.PropertyType;
+            object propertyValue = propertyInfo.GetValue(owner);
 
-    // If property is a string stop traversal (ignore that string is a char[])
-    if (propertyType.IsPrimitive || propertyType.Equals(typeof(string)))
-    {
-      return propertyValue;
-    }
+            // If property is a collection don't traverse collection properties but the items instead
+            if (!propertyType.Equals(typeof(string)) && (typeof(ICollection<>).Name.Equals(propertyValue.GetType().BaseType.Name) || typeof(Collection<>).Name.Equals(propertyValue.GetType().BaseType.Name)))
+            {
+                var collectionItems = new List<Dictionary<string, object>>();
+                var count = (int)propertyType.GetProperty("Count").GetValue(propertyValue);
+                PropertyInfo indexerProperty = propertyType.GetProperty("Item");
 
-    PropertyInfo[] properties = propertyType.GetProperties(BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance);
-    if (properties.Any())
-    {
-      return properties.ToDictionary(
-                          subtypePropertyInfo => subtypePropertyInfo.Name, 
-                          subtypePropertyInfo => (object) Extensions.ConvertPropertyToDictionary(subtypePropertyInfo, propertyValue));
-    }
+                // Convert collection items to dictionary
+                for (var index = 0; index < count; index++)
+                {
+                    object item = indexerProperty.GetValue(propertyValue, new object[] { index });
+                    PropertyInfo[] itemProperties = item.GetType().GetProperties(BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance);
 
-    return propertyValue;
-  }
+                    if (itemProperties.Any())
+                    {
+                        Dictionary<string, object> dictionary = itemProperties
+                          .ToDictionary(
+                            subtypePropertyInfo => subtypePropertyInfo.Name,
+                            subtypePropertyInfo => Extensions.ConvertPropertyToDictionary(subtypePropertyInfo, item));
+                        collectionItems.Add(dictionary);
+                    }
+                }
+
+                return collectionItems;
+            }
+
+            // If property is a string stop traversal (ignore that string is a char[])
+            if (propertyType.IsPrimitive || propertyType.Equals(typeof(string)))
+            {
+                return propertyValue;
+            }
+
+            PropertyInfo[] properties = propertyType.GetProperties(BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance);
+            if (properties.Any())
+            {
+                return properties.ToDictionary(
+                                    subtypePropertyInfo => subtypePropertyInfo.Name,
+                                    subtypePropertyInfo => (object)Extensions.ConvertPropertyToDictionary(subtypePropertyInfo, propertyValue));
+            }
+
+            return propertyValue;
+        }
         #endregion
         #region DateTime
         public static bool ExpiredSince(this DateTime dateTime, int minutes)
@@ -90,30 +90,37 @@ namespace SSFModManager
         }
         #endregion
         #region DirectoryInfo
-        public static DirectoryInfo Combine(this DirectoryInfo dir, params string[] paths) {
+        public static DirectoryInfo Combine(this DirectoryInfo dir, params string[] paths)
+        {
             var final = dir.FullName;
-            foreach (var path in paths) {
+            foreach (var path in paths)
+            {
                 final = Path.Combine(final, path);
             }
             return new DirectoryInfo(final);
         }
         #endregion
         #region FileInfo
-        public static FileInfo CombineFile(this DirectoryInfo dir, params string[] paths) {
+        public static FileInfo CombineFile(this DirectoryInfo dir, params string[] paths)
+        {
             var final = dir.FullName;
-            foreach (var path in paths) {
+            foreach (var path in paths)
+            {
                 final = Path.Combine(final, path);
             }
             return new FileInfo(final);
         }
-        public static FileInfo Combine(this FileInfo file, params string[] paths) {
+        public static FileInfo Combine(this FileInfo file, params string[] paths)
+        {
             var final = file.DirectoryName;
-            foreach (var path in paths) {
+            foreach (var path in paths)
+            {
                 final = Path.Combine(final, path);
             }
             return new FileInfo(final);
         }
-        public static string FileNameWithoutExtension(this FileInfo file) {
+        public static string FileNameWithoutExtension(this FileInfo file)
+        {
             return Path.GetFileNameWithoutExtension(file.Name);
         }
         /*public static string Extension(this FileInfo file) {
@@ -121,10 +128,12 @@ namespace SSFModManager
         }*/
         public static void AppendLine(this FileInfo file, string line)
         {
-            try {
+            try
+            {
                 if (!file.Exists) file.Create();
                 File.AppendAllLines(file.FullName, new string[] { line });
-            } catch { }
+            }
+            catch { }
         }
         #endregion
         #region UI
@@ -140,12 +149,14 @@ namespace SSFModManager
         }
         #endregion
         #region Object
-        public static string ToJson(this object obj, bool indented = true) {
+        public static string ToJson(this object obj, bool indented = true)
+        {
             return JsonConvert.SerializeObject(obj, (indented ? Formatting.Indented : Formatting.None), new JsonConverter[] { new StringEnumConverter() });
         }
-#endregion
- #region String
-        public static string ToTitleCase(this string source, string langCode = "en-US") {
+        #endregion
+        #region String
+        public static string ToTitleCase(this string source, string langCode = "en-US")
+        {
             return new CultureInfo(langCode, false).TextInfo.ToTitleCase(source);
         }
         public static bool Contains(this string source, string toCheck, StringComparison comp)
@@ -156,10 +167,10 @@ namespace SSFModManager
         {
             return string.IsNullOrEmpty(source);
         }
-        public static string[] Split(this string source, string split, int count=-1, StringSplitOptions options = StringSplitOptions.None)
+        public static string[] Split(this string source, string split, int count = -1, StringSplitOptions options = StringSplitOptions.None)
         {
-            if (count != -1) return source.Split(new string[]{split}, count, options);
-            return source.Split(new string[]{split}, options);
+            if (count != -1) return source.Split(new string[] { split }, count, options);
+            return source.Split(new string[] { split }, options);
         }
         public static string Remove(this string Source, string Replace)
         {
@@ -168,7 +179,7 @@ namespace SSFModManager
         public static string ReplaceLastOccurrence(this string Source, string Find, string Replace)
         {
             int place = Source.LastIndexOf(Find);
-            if(place == -1)
+            if (place == -1)
                 return Source;
             string result = Source.Remove(place, Find.Length).Insert(place, Replace);
             return result;
@@ -183,11 +194,11 @@ namespace SSFModManager
         }
         public static string Enclose(this string text)
         {
-            return SurroundWith(text, "(",")");
+            return SurroundWith(text, "(", ")");
         }
         public static string Brackets(this string text)
         {
-            return SurroundWith(text, "[","]");
+            return SurroundWith(text, "[", "]");
         }
         public static string SurroundWith(this string text, string surrounds)
         {
@@ -208,25 +219,25 @@ namespace SSFModManager
         #region List
         public static string ToQueryString(this NameValueCollection nvc)
         {
-        if (nvc == null) return string.Empty;
+            if (nvc == null) return string.Empty;
 
-        StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new StringBuilder();
 
-        foreach (string key in nvc.Keys)
-        {
-        if (string.IsNullOrWhiteSpace(key)) continue;
+            foreach (string key in nvc.Keys)
+            {
+                if (string.IsNullOrWhiteSpace(key)) continue;
 
-        string[] values = nvc.GetValues(key);
-        if (values == null) continue;
+                string[] values = nvc.GetValues(key);
+                if (values == null) continue;
 
-        foreach (string value in values)
-        {
-            sb.Append(sb.Length == 0 ? "?" : "&");
-            sb.AppendFormat("{0}={1}", key, value);
-        }
-        }
+                foreach (string value in values)
+                {
+                    sb.Append(sb.Length == 0 ? "?" : "&");
+                    sb.AppendFormat("{0}={1}", key, value);
+                }
+            }
 
-        return sb.ToString();
+            return sb.ToString();
         }
         public static bool GetBool(this NameValueCollection collection, string key, bool defaultValue = false)
         {
@@ -250,8 +261,8 @@ namespace SSFModManager
             list.RemoveAt(index);
             return r;
         }
-#endregion
- #region Uri
+        #endregion
+        #region Uri
         private static readonly Regex QueryRegex = new Regex(@"[?&](\w[\w.]*)=([^?&]+)");
         public static IReadOnlyDictionary<string, string> ParseQueryString(this Uri uri)
         {
@@ -264,54 +275,62 @@ namespace SSFModManager
             }
             return paramaters;
         }
-#endregion
- #region Enum
+        #endregion
+        #region Enum
         public static string GetDescription(this Enum value)
         {
             Type type = value.GetType();
             string name = Enum.GetName(type, value);
-            if (name != null) {
+            if (name != null)
+            {
                 FieldInfo field = type.GetField(name);
-                if (field != null) {
-                    DescriptionAttribute attr =  Attribute.GetCustomAttribute(field, typeof(DescriptionAttribute)) as DescriptionAttribute;
-                    if (attr != null) {
+                if (field != null)
+                {
+                    DescriptionAttribute attr = Attribute.GetCustomAttribute(field, typeof(DescriptionAttribute)) as DescriptionAttribute;
+                    if (attr != null)
+                    {
                         return attr.Description;
                     }
                 }
             }
             return null;
         }
-    public static T GetValueFromDescription<T>(string description, bool returnDefault = false)
-    {
-        var type = typeof(T);
-        if(!type.IsEnum) throw new InvalidOperationException();
-        foreach(var field in type.GetFields())
+        public static T GetValueFromDescription<T>(string description, bool returnDefault = false)
         {
-            var attribute = Attribute.GetCustomAttribute(field,
-                typeof(DescriptionAttribute)) as DescriptionAttribute;
-            if(attribute != null)
+            var type = typeof(T);
+            if (!type.IsEnum) throw new InvalidOperationException();
+            foreach (var field in type.GetFields())
             {
-                if(attribute.Description == description)
-                    return (T)field.GetValue(null);
+                var attribute = Attribute.GetCustomAttribute(field,
+                    typeof(DescriptionAttribute)) as DescriptionAttribute;
+                if (attribute != null)
+                {
+                    if (attribute.Description == description)
+                        return (T)field.GetValue(null);
+                }
+                else
+                {
+                    if (field.Name == description)
+                        return (T)field.GetValue(null);
+                }
             }
-            else
-            {
-                if(field.Name == description)
-                    return (T)field.GetValue(null);
-            }
+            if (returnDefault) return default(T);
+            else throw new ArgumentException("Not found.", "description");
         }
-        if (returnDefault) return default(T);
-        else throw new ArgumentException("Not found.", "description");
-    }
-#endregion
- #region Task
-        public static async Task<TResult> TimeoutAfter<TResult>(this Task<TResult> task, TimeSpan timeout) {
-            using (var timeoutCancellationTokenSource = new CancellationTokenSource()) {
+        #endregion
+        #region Task
+        public static async Task<TResult> TimeoutAfter<TResult>(this Task<TResult> task, TimeSpan timeout)
+        {
+            using (var timeoutCancellationTokenSource = new CancellationTokenSource())
+            {
                 var completedTask = await Task.WhenAny(task, Task.Delay(timeout, timeoutCancellationTokenSource.Token));
-                if (completedTask == task) {
+                if (completedTask == task)
+                {
                     timeoutCancellationTokenSource.Cancel();
                     return await task;  // Very important in order to propagate exceptions
-                } else {
+                }
+                else
+                {
                     return default(TResult);
                 }
             }

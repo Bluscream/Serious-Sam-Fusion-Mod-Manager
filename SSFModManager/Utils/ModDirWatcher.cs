@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
 using Talifun.FileWatcher;
 
 namespace SSFModManager
@@ -28,10 +25,12 @@ namespace SSFModManager
 
         private void OnDirectoryDeletedEvent(object sender, DirectoryDeletedEventArgs e)
         {
-            lock (Lock) {
+            lock (Lock)
+            {
                 var modDir = new DirectoryInfo(e.FilePath);
                 var mod = MainForm.Game.Mods.SingleOrDefault(m => m.Id == modDir.Name);
-                if (mod != null) {
+                if (mod != null)
+                {
                     MainForm.Game.Mods.Remove(mod);
                     MainForm.InitModList();
                 }
@@ -47,7 +46,8 @@ namespace SSFModManager
             MainForm.InitModList();
         }
 
-        public static DirectoryInfo getLatestMod() {
+        public static DirectoryInfo getLatestMod()
+        {
             return logDir.GetDirectories().OrderByDescending(f => f.LastWriteTime).First();
         }
 
@@ -74,7 +74,8 @@ namespace SSFModManager
             }
             return null;
         }
-        public void Dispose() {
+        public void Dispose()
+        {
             if (FSWatcher != null)
             {
                 FSWatcher.DirectoryDeletedEvent -= OnDirectoryDeletedEvent;
@@ -82,10 +83,12 @@ namespace SSFModManager
                 FSWatcher.Dispose();
             }
         }
-        public class Log {
+        public class Log
+        {
             public FileInfo File { get; set; }
             public string LastLine { get; set; }
-            public Log(FileInfo file) {
+            public Log(FileInfo file)
+            {
                 File = file;
             }
         }

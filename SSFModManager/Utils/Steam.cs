@@ -1,19 +1,21 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using SSFModManager;
+using Steam.Classes;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
-using Steam.Classes;
-using SSFModManager;
-using Newtonsoft.Json;
 
-namespace Steam.Classes {
-    public class Cache {
+namespace Steam.Classes
+{
+    public class Cache
+    {
         public List<CacheFileDetail> FileDetails = new List<CacheFileDetail>();
     }
-    public class CacheFileDetail : Publishedfiledetail {
+    public class CacheFileDetail : Publishedfiledetail
+    {
         public DateTime lastFetched { get; set; }
         public static CacheFileDetail FromPublishedfiledetail(Publishedfiledetail publishedfiledetail)
         {
@@ -28,7 +30,8 @@ namespace Steam.Classes {
 namespace Steam
 {
 
-    public static class Utils {
+    public static class Utils
+    {
         private static FileInfo cacheFile = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory).CombineFile("steam.cache.json");
         private static Cache cache;
         public static async Task<GetPublishedFileDetailsResponse> GetPublishedFileDetailsAsync(HttpClient webClient, SSF.Mod Mod) => await GetPublishedFileDetailsAsync(webClient, Mod.Id);
@@ -39,8 +42,10 @@ namespace Steam
             var parsedResponse = new GetPublishedFileDetailsResponse();
             if (fileIds.Count < 1) return parsedResponse;
             CheckCache();
-            if (cacheFile.Exists && (!cacheFile.LastWriteTime.ExpiredSince(10))) {
-                foreach (var fileId in fileIds) {
+            if (cacheFile.Exists && (!cacheFile.LastWriteTime.ExpiredSince(10)))
+            {
+                foreach (var fileId in fileIds)
+                {
                     var item = cache.FileDetails.FirstOrDefault(x => x.publishedfileid == fileId);
                     if (item != null) parsedResponse.response.publishedfiledetails.Add(item);
                 }
@@ -54,8 +59,9 @@ namespace Steam
             Console.WriteLine(response.Content);
             */
             var values = new Dictionary<string, string> { { "itemcount", fileIds.Count.ToString() } };
-            for (int i = 0; i < fileIds.Count; i++) {
-                values.Add($"publishedfileids[{i}]", fileIds[i].ToString() );
+            for (int i = 0; i < fileIds.Count; i++)
+            {
+                values.Add($"publishedfileids[{i}]", fileIds[i].ToString());
             }
             var content = new FormUrlEncodedContent(values);
             var url = new Uri("https://api.steampowered.com/ISteamRemoteStorage/GetPublishedFileDetails/v1/");
@@ -65,7 +71,8 @@ namespace Steam
             try { parsedResponse = JsonConvert.DeserializeObject<GetPublishedFileDetailsResponse>(responseString); }
             catch (Exception ex) { Console.WriteLine($"[Steam] Could not deserialize response ({ex.Message})\n{responseString}"); } // {response.ReasonPhrase} ({response.StatusCode})\n
 
-            foreach (var item in parsedResponse.response.publishedfiledetails) {
+            foreach (var item in parsedResponse.response.publishedfiledetails)
+            {
                 cache.FileDetails.RemoveAll(x => x.publishedfileid == item.publishedfileid);
                 cache.FileDetails.Add(CacheFileDetail.FromPublishedfiledetail(item));
             }
@@ -74,15 +81,23 @@ namespace Steam
         }
         private static void CheckCache()
         {
-            if (cache is null) {
-                if (cacheFile.Exists) {
-                    try { cache = JsonConvert.DeserializeObject<Cache>(File.ReadAllText(cacheFile.FullName));
-                    } catch (Exception ex) {
+            if (cache is null)
+            {
+                if (cacheFile.Exists)
+                {
+                    try
+                    {
+                        cache = JsonConvert.DeserializeObject<Cache>(File.ReadAllText(cacheFile.FullName));
+                    }
+                    catch (Exception ex)
+                    {
                         Console.WriteLine($"[ERROR] [Steam] Unable to load cache ({ex.Message}), starting over...");
                         cache = new Cache();
                     }
-                } else {
-                        cache = new Cache();
+                }
+                else
+                {
+                    cache = new Cache();
                 }
             }
         }

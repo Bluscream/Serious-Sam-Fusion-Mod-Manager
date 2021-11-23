@@ -1,18 +1,17 @@
-﻿using System;
+﻿using SSFModManager;
+using Steam.Classes;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using SSFModManager;
-using SteamSharp;
-using Steam.Classes;
 using System.Net.Http;
-using System.Diagnostics;
-using System.ComponentModel;
-using System.Reflection;
 
 namespace SSF
 {
-    public enum Architecture {
+    public enum Architecture
+    {
         [Description("x64")]
         WIN_64,
         [Description("x86")]
@@ -23,14 +22,16 @@ namespace SSF
         public string FileName = "";
         public List<Process> Processes { get; set; } = new List<Process>();
         public FileInfo File(Game game, Architecture arch) => game.BasePath.CombineFile("bin", arch.GetDescription(), FileName);
-        public bool Running() {
+        public bool Running()
+        {
             var pName = Path.GetFileNameWithoutExtension(FileName);
             Processes = Process.GetProcessesByName(pName).ToList();
             if (Processes.Count == 0) return false;
             return true;
         }
     }
-    public class Binaries {
+    public class Binaries
+    {
         public Binary Main = new Binary() { FileName = Game.AppFileName };
         public Binary Modded = new Binary() { FileName = "Sam2017_Unrestricted.exe" };
         public Binary Editor = new Binary() { FileName = "Sam2017_SeriousEditor.exe" };
@@ -48,10 +49,12 @@ namespace SSF
         private List<DirectoryInfo> ModDirs { get; set; } = new List<DirectoryInfo>();
         public delegate void DetailsLoadedEventHandler(object sender);
         public event DetailsLoadedEventHandler OnDetailsLoaded;
-        public Game(DirectoryInfo basePath) {
+        public Game(DirectoryInfo basePath)
+        {
             BasePath = basePath;
             ModDirs = GetModsDirs();
-            foreach (var modDir in ModDirs) {
+            foreach (var modDir in ModDirs)
+            {
                 Mods.AddRange(LoadMods(modDir));
             }
         }
@@ -67,18 +70,21 @@ namespace SSF
             // if (!ContentPathFile.Exists) throw new FileNotFoundException();
             var dirs = new List<DirectoryInfo>();
             var lines = File.ReadAllLines(ContentPathFile.FullName);
-            foreach (var line in lines) {
+            foreach (var line in lines)
+            {
                 var modDir = new DirectoryInfo(line.Substring(1));
                 if (modDir.Exists) dirs.Add(modDir);
             }
             return dirs;
         }
-        public List<Mod> LoadMods(DirectoryInfo modsDir) {
+        public List<Mod> LoadMods(DirectoryInfo modsDir)
+        {
             var mods = new List<Mod>();
-            foreach (var modDir in Directory.GetDirectories(modsDir.FullName)) {
+            foreach (var modDir in Directory.GetDirectories(modsDir.FullName))
+            {
                 var ModDir = new DirectoryInfo(modDir);
                 var mod = new Mod(ModDir, this);
-                if(mod.Id != "386670448") mods.Add(mod);
+                if (mod.Id != "386670448") mods.Add(mod);
             }
             return mods;
         }
@@ -93,12 +99,15 @@ namespace SSF
             Console.WriteLine(response.Content);
             */
             var parsedResponse = await Steam.Utils.GetPublishedFileDetailsAsync(webClient, fileIds);
-            foreach (var details in parsedResponse.response.publishedfiledetails) {
+            foreach (var details in parsedResponse.response.publishedfiledetails)
+            {
                 Mods.Where(t => t.Id == details.publishedfileid).First().Details = details;
             }
-            try {
+            try
+            {
                 OnDetailsLoaded?.Invoke(this);
-            } catch (Exception ex) { Console.WriteLine("[ERROR] UpdateModDetailsAsync: {0}", ex.Message); }
+            }
+            catch (Exception ex) { Console.WriteLine("[ERROR] UpdateModDetailsAsync: {0}", ex.Message); }
             return parsedResponse;
         }
     }

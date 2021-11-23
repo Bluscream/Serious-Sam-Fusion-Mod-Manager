@@ -1,12 +1,11 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Security.Principal;
-using System.Diagnostics;
 using System.Reflection;
+using System.Security.Principal;
+using System.Text;
 using System.Windows.Forms;
-using System.Net;
 
 namespace SSFModManager
 {
@@ -94,32 +93,39 @@ namespace SSFModManager
             }
             return isAdmin;
         }
-        public static string Base64Encode(string plainText) {
-          var plainTextBytes = Encoding.UTF8.GetBytes(plainText);
-          return Convert.ToBase64String(plainTextBytes);
+        public static string Base64Encode(string plainText)
+        {
+            var plainTextBytes = Encoding.UTF8.GetBytes(plainText);
+            return Convert.ToBase64String(plainTextBytes);
         }
-        public static string Base64Decode(string base64EncodedData) {
+        public static string Base64Decode(string base64EncodedData)
+        {
             var base64EncodedBytes = Convert.FromBase64String(base64EncodedData);
             return Encoding.UTF8.GetString(base64EncodedBytes);
         }
-        public static FileInfo DownloadFile(string url, DirectoryInfo destinationPath, string fileName = null) {
+        public static FileInfo DownloadFile(string url, DirectoryInfo destinationPath, string fileName = null)
+        {
             if (fileName == null) fileName = url.Split('/').Last();
             // Main.webClient.DownloadFile(url, Path.Combine(destinationPath.FullName, fileName));
             return new FileInfo(Path.Combine(destinationPath.FullName, fileName));
         }
-        public static void ShowFileInExplorer(FileInfo file) {
-            StartProcess("explorer.exe", null, "/select, "+file.FullName.Quote());
+        public static void ShowFileInExplorer(FileInfo file)
+        {
+            StartProcess("explorer.exe", null, "/select, " + file.FullName.Quote());
         }
-        public static void OpenFolderInExplorer(DirectoryInfo dir) {
+        public static void OpenFolderInExplorer(DirectoryInfo dir)
+        {
             StartProcess("explorer.exe", null, dir.FullName.Quote());
         }
         public static Process StartProcess(FileInfo file, params string[] args) => StartProcess(file.FullName, file.DirectoryName, args);
-        public static Process StartProcess(string file, string workDir = null, params string[] args) {
+        public static Process StartProcess(string file, string workDir = null, params string[] args)
+        {
             ProcessStartInfo proc = new ProcessStartInfo();
             proc.FileName = file;
             proc.Arguments = string.Join(" ", args);
             Console.WriteLine(proc.FileName + " " + proc.Arguments);
-            if (workDir != null) {
+            if (workDir != null)
+            {
                 proc.WorkingDirectory = workDir;
                 Console.WriteLine("WorkingDirectory: " + proc.WorkingDirectory);
             }

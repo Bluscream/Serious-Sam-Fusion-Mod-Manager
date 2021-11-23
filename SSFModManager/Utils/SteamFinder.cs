@@ -158,9 +158,9 @@ namespace VRCModManager.Dependencies
 
         static string FindWindowsSteamPath()
         {
-           var regPath = Environment.Is64BitOperatingSystem
-                ? @"SOFTWARE\Wow6432Node\Valve\Steam"
-                : @"SOFTWARE\Valve\Steam";
+            var regPath = Environment.Is64BitOperatingSystem
+                 ? @"SOFTWARE\Wow6432Node\Valve\Steam"
+                 : @"SOFTWARE\Valve\Steam";
             var subRegKey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(regPath);
             var path = subRegKey?.GetValue("InstallPath").ToString()
                 .Replace('/', '\\'); // not actually required, just for consistency's sake
