@@ -36,6 +36,7 @@
             this.menu_mods = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.openFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.disableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.workshopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabs_modinfo = new System.Windows.Forms.TabControl();
             this.tab_modinfo = new System.Windows.Forms.TabPage();
             this.panel_modinfo = new System.Windows.Forms.FlowLayoutPanel();
@@ -69,7 +70,6 @@
             this.tab_all = new System.Windows.Forms.TabPage();
             this.status = new System.Windows.Forms.StatusStrip();
             this.lbl_status = new System.Windows.Forms.ToolStripStatusLabel();
-            this.workshopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -136,7 +136,7 @@
             this.disableToolStripMenuItem,
             this.workshopToolStripMenuItem});
             this.menu_mods.Name = "menu_mods";
-            this.menu_mods.Size = new System.Drawing.Size(181, 92);
+            this.menu_mods.Size = new System.Drawing.Size(140, 70);
             this.menu_mods.Opening += new System.ComponentModel.CancelEventHandler(this.Menu_mods_Opening);
             // 
             // openFolderToolStripMenuItem
@@ -152,6 +152,13 @@
             this.disableToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
             this.disableToolStripMenuItem.Text = "Disable";
             this.disableToolStripMenuItem.Click += new System.EventHandler(this.DisableToolStripMenuItem_Click);
+            // 
+            // workshopToolStripMenuItem
+            // 
+            this.workshopToolStripMenuItem.Name = "workshopToolStripMenuItem";
+            this.workshopToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
+            this.workshopToolStripMenuItem.Text = "Workshop";
+            this.workshopToolStripMenuItem.Click += new System.EventHandler(this.workshopToolStripMenuItem_Click);
             // 
             // tabs_modinfo
             // 
@@ -354,7 +361,8 @@
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
             this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.openToolStripMenuItem.Tag = "steam://openurl/https://steamcommunity.com/app/564310/workshop/";
+            this.openToolStripMenuItem.Tag = "steam://openurl/https://steamcommunity.com/workshop/browse/?appid=564310&browseso" +
+    "rt=mostrecent&section=readytouseitems&actualsort=mostrecent";
             this.openToolStripMenuItem.Text = "Workshop";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.onLinkClicked);
             // 
@@ -440,13 +448,6 @@
             // 
             this.lbl_status.Name = "lbl_status";
             this.lbl_status.Size = new System.Drawing.Size(0, 17);
-            // 
-            // workshopToolStripMenuItem
-            // 
-            this.workshopToolStripMenuItem.Name = "workshopToolStripMenuItem";
-            this.workshopToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.workshopToolStripMenuItem.Text = "Workshop";
-            this.workshopToolStripMenuItem.Click += new System.EventHandler(this.workshopToolStripMenuItem_Click);
             // 
             // MainForm
             // 
