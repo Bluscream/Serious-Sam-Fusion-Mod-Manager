@@ -14,10 +14,13 @@ namespace SSFModManager
     {
         private static Regex tabRegex = new Regex(@"(.*) \(\d+\)");
         public SSF.Game Game;
+
         // public SteamClient steam;
         public HttpClient webClient;
+
         private ModDirWatcher ModDirWatcher;
         private List<SSF.Mod> modsInCategory = new List<SSF.Mod>();
+
         private void PreInit()
         {
             var path = new Setup.PathLogic();
@@ -27,8 +30,8 @@ namespace SSFModManager
                 MessageBox.Show("Sorry the game wasn't found, exiting.."); Application.Exit();
             }
             Game = new SSF.Game(binPath.Parent.Parent);
-
         }
+
         public MainForm()
         {
             PreInit();
@@ -297,9 +300,9 @@ namespace SSFModManager
             }
             MessageBox.Show($"Killed {Game.Processes.Where(p => p.HasExited).Count()} / {Game.Processes.Count} processes");
         }
+
         private void FocusToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
         }
 
         private void ReloadToolStripMenuItem1_Click(object sender, EventArgs e)

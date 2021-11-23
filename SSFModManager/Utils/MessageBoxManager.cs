@@ -1,16 +1,18 @@
 ﻿#pragma warning disable 0618
+
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
 using System.Text;
+
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, UnmanagedCode = true)]
 
 namespace System.Windows.Forms
 
 {
-
     public class MessageBoxManager
     {
         private delegate IntPtr HookProc(int nCode, IntPtr wParam, IntPtr lParam);
+
         private delegate bool EnumChildProc(IntPtr hWnd, IntPtr lParam);
 
         private const int WH_CALLWNDPROCRET = 12;
@@ -27,7 +29,6 @@ namespace System.Windows.Forms
         private const int MBIgnore = 5;
         private const int MBYes = 6;
         private const int MBNo = 7;
-
 
         [DllImport("user32.dll")]
         private static extern IntPtr SendMessage(IntPtr hWnd, int Msg, IntPtr wParam, IntPtr lParam);
@@ -65,7 +66,6 @@ namespace System.Windows.Forms
         [DllImport("user32.dll", EntryPoint = "SetWindowTextW", CharSet = CharSet.Unicode)]
         private static extern bool SetWindowText(IntPtr hWnd, string lpString);
 
-
         [StructLayout(LayoutKind.Sequential)]
         public struct CWPRETSTRUCT
         {
@@ -78,8 +78,10 @@ namespace System.Windows.Forms
 
         private static HookProc hookProc;
         private static EnumChildProc enumProc;
+
         [ThreadStatic]
         private static IntPtr hHook;
+
         [ThreadStatic]
         private static int nButton;
 
@@ -87,26 +89,32 @@ namespace System.Windows.Forms
         /// OK text
         /// </summary>
         public static string OK = "&OK";
+
         /// <summary>
         /// Cancel text
         /// </summary>
         public static string Cancel = "&Cancel";
+
         /// <summary>
         /// Abort text
         /// </summary>
         public static string Abort = "&Abort";
+
         /// <summary>
         /// Retry text
         /// </summary>
         public static string Retry = "&Retry";
+
         /// <summary>
         /// Ignore text
         /// </summary>
         public static string Ignore = "&Ignore";
+
         /// <summary>
         /// Yes text
         /// </summary>
         public static string Yes = "&Yes";
+
         /// <summary>
         /// No text
         /// </summary>
@@ -189,32 +197,35 @@ namespace System.Windows.Forms
                     case MBOK:
                         SetWindowText(hWnd, OK);
                         break;
+
                     case MBCancel:
                         SetWindowText(hWnd, Cancel);
                         break;
+
                     case MBAbort:
                         SetWindowText(hWnd, Abort);
                         break;
+
                     case MBRetry:
                         SetWindowText(hWnd, Retry);
                         break;
+
                     case MBIgnore:
                         SetWindowText(hWnd, Ignore);
                         break;
+
                     case MBYes:
                         SetWindowText(hWnd, Yes);
                         break;
+
                     case MBNo:
                         SetWindowText(hWnd, No);
                         break;
-
                 }
                 nButton++;
             }
 
             return true;
         }
-
-
     }
 }

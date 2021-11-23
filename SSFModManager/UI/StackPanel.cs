@@ -67,12 +67,14 @@ namespace SSFModManager.UI
                         if (ForceAutoresizeOfControls || control.AutoSize)
                             control.Width = this.ClientSize.Width - control.Margin.Left - control.Margin.Right;
                     break;
+
                 case FlowDirection.LeftToRight:
                 case FlowDirection.RightToLeft:
                     foreach (Control control in this.Controls)
                         if (ForceAutoresizeOfControls || control.AutoSize)
                             control.Height = this.ClientSize.Height - control.Margin.Top - control.Margin.Bottom;
                     break;
+
                 default:
                     break;
             }
@@ -94,10 +96,12 @@ namespace SSFModManager.UI
                         case FlowDirection.TopDown:
                             control.Width = this.ClientSize.Width - control.Margin.Left - control.Margin.Right;
                             break;
+
                         case FlowDirection.LeftToRight:
                         case FlowDirection.RightToLeft:
                             control.Height = this.ClientSize.Height - control.Margin.Top - control.Margin.Bottom;
                             break;
+
                         default:
                             break;
                     }

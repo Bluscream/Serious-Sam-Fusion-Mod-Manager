@@ -14,14 +14,18 @@ namespace SSF
     {
         [Description("x64")]
         WIN_64,
+
         [Description("x86")]
         WIN_32
     }
+
     public class Binary
     {
         public string FileName = "";
         public List<Process> Processes { get; set; } = new List<Process>();
+
         public FileInfo File(Game game, Architecture arch) => game.BasePath.CombineFile("bin", arch.GetDescription(), FileName);
+
         public bool Running()
         {
             var pName = Path.GetFileNameWithoutExtension(FileName);
@@ -30,25 +34,32 @@ namespace SSF
             return true;
         }
     }
+
     public class Binaries
     {
         public Binary Main = new Binary() { FileName = Game.AppFileName };
         public Binary Modded = new Binary() { FileName = "Sam2017_Unrestricted.exe" };
         public Binary Editor = new Binary() { FileName = "Sam2017_SeriousEditor.exe" };
     }
+
     public class Game
     {
         public const string Name = "Serious Sam Fusion";
         public const int SteamAppId = 564310;
         public const string AppFileName = "Sam2017.exe";
-        public List<Process> Processes { get { return Binaries.Main.Processes.Concat(Binaries.Modded.Processes).ToList(); } }
+        public List<Process> Processes
+        { get { return Binaries.Main.Processes.Concat(Binaries.Modded.Processes).ToList(); } }
         public Binaries Binaries { get; set; } = new Binaries();
-        public DirectoryInfo DisabledModsDir { get { return BasePath.Combine("Temp", "SteamWorkshop"); } }
+        public DirectoryInfo DisabledModsDir
+        { get { return BasePath.Combine("Temp", "SteamWorkshop"); } }
         public DirectoryInfo BasePath { get; set; }
         public List<Mod> Mods { get; set; } = new List<Mod>();
         private List<DirectoryInfo> ModDirs { get; set; } = new List<DirectoryInfo>();
+
         public delegate void DetailsLoadedEventHandler(object sender);
+
         public event DetailsLoadedEventHandler OnDetailsLoaded;
+
         public Game(DirectoryInfo basePath)
         {
             BasePath = basePath;
@@ -58,10 +69,12 @@ namespace SSF
                 Mods.AddRange(LoadMods(modDir));
             }
         }
+
         public bool Running()
         {
             return (Binaries.Main.Running() || Binaries.Modded.Running());
         }
+
         public List<DirectoryInfo> GetModsDirs(bool force = true)
         {
             if (!force) return ModDirs;
@@ -77,6 +90,7 @@ namespace SSF
             }
             return dirs;
         }
+
         public List<Mod> LoadMods(DirectoryInfo modsDir)
         {
             var mods = new List<Mod>();
@@ -88,6 +102,7 @@ namespace SSF
             }
             return mods;
         }
+
         public async System.Threading.Tasks.Task<GetPublishedFileDetailsResponse> UpdateModDetailsAsync(HttpClient webClient)
         {
             /*SteamRequest request = new SteamRequest("ISteamRemoteStorage/GetPublishedFileDetails/v1/");

@@ -14,9 +14,11 @@ namespace Steam.Classes
     {
         public List<CacheFileDetail> FileDetails = new List<CacheFileDetail>();
     }
+
     public class CacheFileDetail : Publishedfiledetail
     {
         public DateTime lastFetched { get; set; }
+
         public static CacheFileDetail FromPublishedfiledetail(Publishedfiledetail publishedfiledetail)
         {
             var fdstr = JsonConvert.SerializeObject(publishedfiledetail);
@@ -29,12 +31,13 @@ namespace Steam.Classes
 
 namespace Steam
 {
-
     public static class Utils
     {
         private static FileInfo cacheFile = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory).CombineFile("steam.cache.json");
         private static Cache cache;
+
         public static async Task<GetPublishedFileDetailsResponse> GetPublishedFileDetailsAsync(HttpClient webClient, SSF.Mod Mod) => await GetPublishedFileDetailsAsync(webClient, Mod.Id);
+
         public static async Task<GetPublishedFileDetailsResponse> GetPublishedFileDetailsAsync(HttpClient webClient, string fileId) => await GetPublishedFileDetailsAsync(webClient, new List<string>() { fileId });
 
         public static async Task<GetPublishedFileDetailsResponse> GetPublishedFileDetailsAsync(HttpClient webClient, List<string> fileIds)
@@ -79,6 +82,7 @@ namespace Steam
             File.WriteAllText(cacheFile.FullName, JsonConvert.SerializeObject(cache));
             return parsedResponse;
         }
+
         private static void CheckCache()
         {
             if (cache is null)

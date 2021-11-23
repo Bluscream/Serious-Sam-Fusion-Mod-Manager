@@ -14,18 +14,21 @@ namespace SSF
     {
         public string PrivatePath { get; set; }
         public string Hash { get; set; }
+
         public FileWithHash(string sharedPath, string hash)
         {
             PrivatePath = sharedPath; Hash = hash;
         }
     }
+
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public class Mod
     {
         [JsonIgnore]
         private Game Game { get; set; }
+
         public bool Disabled
         {
             get
@@ -41,14 +44,17 @@ namespace SSF
                     case true:
                         if (!disabledFile.Exists) File.WriteAllText(disabledFile.FullName, $"Disabled by Serious Sam Mod Manager at {DateTime.Now}\nID: {Id} ({Uuid})\nName: {Name}\nDir: {Directory.FullName}");
                         break;
+
                     case false:
                         if (disabledFile.Exists) disabledFile.Delete();
                         break;
+
                     default:
                         break;
                 }
             }
         }
+
         public string Id { get; set; } = "<NO ID>";
         public DirectoryInfo Directory { get; set; }
         public string WorkshopVersion { get; set; } = "0";
@@ -57,6 +63,7 @@ namespace SSF
         public FileWithHash GroFile { get; set; }
         public FileWithHash Thumbnail { get; set; }
         public Publishedfiledetail Details { get; set; }
+
         public List<string> Tags
         {
             get
@@ -70,8 +77,9 @@ namespace SSF
                 return ret;
             }
         }
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="id"></param>
         /// <param name="directory"></param>
@@ -84,8 +92,9 @@ namespace SSF
         {
             Id = id; Directory = directory; WorkshopVersion = workshopversion; Name = name; Uuid = uuid; GroFile = grofile; Thumbnail = thumbnail;
         }
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="directory"></param>
         /// <returns></returns>
@@ -121,6 +130,7 @@ namespace SSF
             Details = parsedResponse.response.publishedfiledetails.First();
             return Details;
         }
+
         public override string ToString()
         {
             return Name;

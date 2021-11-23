@@ -7,20 +7,22 @@ namespace SSFModManager
 {
     public partial class MainForm
     {
-
         private void OnlyShowDisabled_Click(object sender, EventArgs e)
         {
             onlyShowEnabled.Checked = onlyShowDisabled.Checked;
             onlyShowDisabled.Checked = !onlyShowDisabled.Checked;
             FilterByText();
         }
+
         private void OnlyShowEnabled_Click(object sender, EventArgs e)
         {
             onlyShowDisabled.Checked = onlyShowEnabled.Checked;
             onlyShowEnabled.Checked = !onlyShowEnabled.Checked;
             FilterByText();
         }
+
         private void FilterMenuItem_Click(object sender, EventArgs e) => SwitchFilter((ToolStripMenuItem)sender);
+
         private void SwitchFilter(ToolStripMenuItem selectedMenuItem)
         {
             selectedMenuItem.Checked ^= true;
@@ -48,6 +50,7 @@ namespace SSFModManager
         }
 
         private void Txt_mods_filter_TextChanged(object sender, EventArgs e) => FilterByText();
+
         private async void FilterByText()
         {
             var txt = txt_mods_filter.Text.ToLowerInvariant();

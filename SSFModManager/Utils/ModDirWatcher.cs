@@ -14,6 +14,7 @@ namespace SSFModManager
         public static IEnhancedFileSystemWatcher FSWatcher;
         public static List<Log> watching = new List<Log>();
         private MainForm MainForm;
+
         public void Init(MainForm mainForm)
         {
             logDir = mainForm.Game.GetModsDirs().First();
@@ -74,6 +75,7 @@ namespace SSFModManager
             }
             return null;
         }
+
         public void Dispose()
         {
             if (FSWatcher != null)
@@ -83,10 +85,12 @@ namespace SSFModManager
                 FSWatcher.Dispose();
             }
         }
+
         public class Log
         {
             public FileInfo File { get; set; }
             public string LastLine { get; set; }
+
             public Log(FileInfo file)
             {
                 File = file;

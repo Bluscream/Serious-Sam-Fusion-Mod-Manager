@@ -30,6 +30,7 @@ namespace SSFModManager.Setup
             var fallback = GetFallbackDirectory();
             return fallback;
         }
+
         private DirectoryInfo GetFallbackDirectory()
         {
             bool folder = false;
@@ -43,6 +44,7 @@ namespace SSFModManager.Setup
             else if (result == DialogResult.No) folder = true;
             return NotFoundHandler(folder);
         }
+
         private DirectoryInfo GetSteamLocation()
         {
             try
@@ -57,6 +59,7 @@ namespace SSFModManager.Setup
                 return null;
             }
         }
+
         /* Logger.Warn("Game not found, setup required!");
             var confirmResult = MessageBox.Show("VRChat.exe was not found in the same directory as this launcher.\n\nHowever it needs to be in the same folder to work properly, please select your game to move this launcher next to it and restart.", "Game not found!", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
             if (confirmResult == DialogResult.Cancel) Application.Exit();
@@ -75,6 +78,7 @@ namespace SSFModManager.Setup
             Utils.Utils.Exit();
         }
         */
+
         private DirectoryInfo NotFoundHandler(bool folder)
         {
             var found = string.Empty;
@@ -85,6 +89,7 @@ namespace SSFModManager.Setup
             }
             return found == string.Empty ? null : new DirectoryInfo(found);
         }
+
         public string FindFile()
         {
             using (var fileDialog = new OpenFileDialog())
@@ -110,6 +115,7 @@ namespace SSFModManager.Setup
                 return string.Empty;
             }
         }
+
         public string FindFolder()
         {
             using (var folderDialog = new FolderBrowserDialog())
