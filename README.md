@@ -1,4 +1,4 @@
-# Serious-Sam-Fusion-Mod-Manager ![](https://img.shields.io/github/downloads/Bluscream/Serious-Sam-Fusion-Mod-Manager/total)
+# Serious-Sam-Fusion-Mod-Manager ![](https://img.shields.io/github/downloads/Bluscream/Serious-Sam-Fusion-Mod-Manager/total) ![Lines of code](https://img.shields.io/tokei/lines/github/Bluscream/Serious-Sam-Fusion-Mod-Manager)
 
 Mod Manager for Serious Sam Fusion
 
